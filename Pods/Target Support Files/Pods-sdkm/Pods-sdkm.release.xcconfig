@@ -1,0 +1,10 @@
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/TwilioVideo/Build/iOS"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Firebase" "${PODS_ROOT}/Headers/Public/FirebaseCore" "${PODS_ROOT}/Headers/Public/FirebaseDatabase" "${PODS_ROOT}/Headers/Public/GoogleUtilities" "${PODS_ROOT}/Headers/Public/leveldb-library" "${PODS_ROOT}/Headers/Public/libPhoneNumber-iOS" "${PODS_ROOT}/Headers/Public/nanopb" $(inherited) ${PODS_ROOT}/Firebase/CoreOnly/Sources
+LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks' '@executable_path/../../Frameworks'
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore" "${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDatabase" "${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities-Environment-Logger" "${PODS_CONFIGURATION_BUILD_DIR}/leveldb-library" "${PODS_CONFIGURATION_BUILD_DIR}/libPhoneNumber-iOS"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"FirebaseCore" -l"FirebaseDatabase" -l"GoogleUtilities-Environment-Logger" -l"c++" -l"icucore" -l"leveldb-library" -l"libPhoneNumber-iOS" -l"z" -framework "CFNetwork" -framework "CoreTelephony" -framework "Foundation" -framework "Security" -framework "SystemConfiguration" -framework "TwilioVideo"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods

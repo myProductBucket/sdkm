@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>developmentAppKey</key>
+  <string>WsjbzuCfT0GnI0VESSCYJQ</string>
+  <key>developmentAppSecret</key>
+  <string>wNWTOO9jR1K0ckBUYZty5w</string>
+  <key>productionAppKey</key>
+  <string>JR8KwjL3REKt8V4t6F1_dg</string>
+  <key>productionAppSecret</key>
+  <string>e-zhipytQWK7nQMlEm9Zyw</string>
+  <key>useWKWebView</key>
+  <true/>
+</dict>
+</plist>

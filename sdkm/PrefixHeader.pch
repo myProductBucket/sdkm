@@ -1,0 +1,62 @@
+//
+//  PrefixHeader.pch
+//  sdkm
+//
+//  Created by Mobile on 15.12.18.
+//  Copyright © 2018 BMA. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <libPhoneNumber-iOS/NBPhoneNumber.h>
+#import <libPhoneNumber-iOS/NBAsYouTypeFormatter.h>
+#import <libPhoneNumber-iOS/NBPhoneNumberUtil.h>
+#import "AFViewShaker.h"
+#import "MBProgressHUD.h"
+#import "UIImageView+AFNetworking.h"
+#import "UIImage+Category.h"
+#import "UIColor+Category.h"
+#import "UIView+Category.h"
+#import "NSString+Category.h"
+#import "NSMutableAttributedString+Category.h"
+
+#import "GVUser.h"
+#import "GVService.h"
+
+#import "GVShared.h"
+#import "GVGlobal.h"
+
+// Constants
+#define GV_SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width > [[UIScreen mainScreen] bounds].size.height ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width)
+#define GV_SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.width < [[UIScreen mainScreen] bounds].size.height ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width)
+#define GV_IPHONE UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone
+#define GV_IPAD   UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
+// Standard Constant Values
+#define GROOPVIEW @"Groopview"
+#define GV_ERROR_MESSAGE @"Something went wrong. Please try again later!"
+#define GV_NULL @"null"
+
+// NSNotification Names
+#define GV_NS_REGISTERED @"registered"
+
+// NSUserDefault Keys
+#define PREF_SIGN_UP_INFO @"sign_up_info"
+
+#define PREF_USER_TOKEN @"user_token" // Access Token for Groopview Server
+#define PREF_TOKEN_TYPE @"token_type" // Token Type
+#define PREF_REFRESH_TOKEN @"refresh_token" // Refresh Token
+
+// API End Point & ...
+#define GV_CONTENT_TYPE @"application/json"
+#define GV_BASE_URL @"http://sdk.groopview.co"
+
+#define GV_CLIENT_KEYS @"Clientkeys"
+#define GV_ACCEPT_TYPE @"Accept"
+#define GV_AUTHORIZATION @"Authorization"
+
+#endif /* PrefixHeader_pch */
