@@ -16,6 +16,9 @@
     
 }
 
+@property (weak, nonatomic) IBOutlet UICollectionView *colGroops;
+@property (weak, nonatomic) IBOutlet UILabel *lblNotFound;
+
 @property (strong, nonatomic) NSMutableArray *allGroops;
 
 @end

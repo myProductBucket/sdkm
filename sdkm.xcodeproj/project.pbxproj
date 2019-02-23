@@ -6,8 +6,24 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		759310E721D4098900E76232 /* Groopview-Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 759310E821D4098900E76232 /* Build configuration list for PBXAggregateTarget "Groopview-Universal" */;
+			buildPhases = (
+				759310EB21D409C700E76232 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Groopview-Universal";
+			productName = "Groopview-Universal";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		091F16A92F9056701D510237 /* libPods-sdkm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF350D7FB71611C3F8DB241 /* libPods-sdkm.a */; };
+		751EE3A421F648F4002EBB70 /* ReactionsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 751EE39D21F648F3002EBB70 /* ReactionsView.h */; };
+		751EE3A521F648F4002EBB70 /* ReactionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 751EE39E21F648F3002EBB70 /* ReactionsView.m */; };
 		754E01E521C66DD200DDBCD8 /* AFCompatibilityMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E01C221C66DD200DDBCD8 /* AFCompatibilityMacros.h */; };
 		754E01E621C66DD200DDBCD8 /* AFHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E01C321C66DD200DDBCD8 /* AFHTTPSessionManager.h */; };
 		754E01E721C66DD200DDBCD8 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E01C421C66DD200DDBCD8 /* AFHTTPSessionManager.m */; };
@@ -49,23 +65,17 @@
 		754E021221C68E3B00DDBCD8 /* GVService.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E021021C68E3B00DDBCD8 /* GVService.m */; };
 		754E021521C6B4D800DDBCD8 /* GVStartGroopviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E021321C6B4D800DDBCD8 /* GVStartGroopviewController.h */; };
 		754E021621C6B4D800DDBCD8 /* GVStartGroopviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E021421C6B4D800DDBCD8 /* GVStartGroopviewController.m */; };
-		754E021821C6B62100DDBCD8 /* home_map.png in Resources */ = {isa = PBXBuildFile; fileRef = 754E021721C6B62000DDBCD8 /* home_map.png */; };
-		754E021B21C6B6AD00DDBCD8 /* create_groop_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 754E021921C6B6AD00DDBCD8 /* create_groop_gray.png */; };
-		754E021C21C6B6AD00DDBCD8 /* existing_groop_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 754E021A21C6B6AD00DDBCD8 /* existing_groop_gray.png */; };
 		754E022421C6BBFD00DDBCD8 /* UIView+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E022221C6BBFD00DDBCD8 /* UIView+Category.h */; };
 		754E022521C6BBFD00DDBCD8 /* UIView+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E022321C6BBFD00DDBCD8 /* UIView+Category.m */; };
-		754E022821C6D50D00DDBCD8 /* GVBaseNavController.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E022621C6D50D00DDBCD8 /* GVBaseNavController.h */; };
+		754E022821C6D50D00DDBCD8 /* GVBaseNavController.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E022621C6D50D00DDBCD8 /* GVBaseNavController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		754E022921C6D50D00DDBCD8 /* GVBaseNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E022721C6D50D00DDBCD8 /* GVBaseNavController.m */; };
 		754E022C21C6D56D00DDBCD8 /* GVCreateGroopController.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E022A21C6D56D00DDBCD8 /* GVCreateGroopController.h */; };
 		754E022D21C6D56D00DDBCD8 /* GVCreateGroopController.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E022B21C6D56D00DDBCD8 /* GVCreateGroopController.m */; };
-		754E022F21C6D73E00DDBCD8 /* add_contact_dark_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 754E022E21C6D73E00DDBCD8 /* add_contact_dark_gray.png */; };
-		754E023121C6D7EA00DDBCD8 /* add_contact_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 754E023021C6D7E900DDBCD8 /* add_contact_bottom.png */; };
-		754E023321C6D82E00DDBCD8 /* delete_contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 754E023221C6D82E00DDBCD8 /* delete_contact.png */; };
 		754E023721C6D8BE00DDBCD8 /* GVCircleImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E023521C6D8BE00DDBCD8 /* GVCircleImageView.h */; };
 		754E023821C6D8BE00DDBCD8 /* GVCircleImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E023621C6D8BE00DDBCD8 /* GVCircleImageView.m */; };
 		754E023C21C6D92800DDBCD8 /* GVContactCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E023A21C6D92800DDBCD8 /* GVContactCell.h */; };
 		754E023D21C6D92800DDBCD8 /* GVContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E023B21C6D92800DDBCD8 /* GVContactCell.m */; };
-		754E024021C6DBB100DDBCD8 /* GVBaseController.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E023E21C6DBB100DDBCD8 /* GVBaseController.h */; };
+		754E024021C6DBB100DDBCD8 /* GVBaseController.h in Headers */ = {isa = PBXBuildFile; fileRef = 754E023E21C6DBB100DDBCD8 /* GVBaseController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		754E024121C6DBB100DDBCD8 /* GVBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 754E023F21C6DBB100DDBCD8 /* GVBaseController.m */; };
 		756D5BB421CD3B9700C6CEB8 /* GVStartButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 756D5BB221CD3B9700C6CEB8 /* GVStartButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		756D5BB521CD3B9700C6CEB8 /* GVStartButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 756D5BB321CD3B9700C6CEB8 /* GVStartButton.m */; };
@@ -73,8 +83,6 @@
 		756D5BBA21CD434100C6CEB8 /* UIColor+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 756D5BB821CD434100C6CEB8 /* UIColor+Category.h */; };
 		756D5BBB21CD434100C6CEB8 /* UIColor+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 756D5BB921CD434100C6CEB8 /* UIColor+Category.m */; };
 		756D5BD421CEB66200C6CEB8 /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 756D5BD321CEB66200C6CEB8 /* AirshipConfig.plist */; };
-		756D5BD521CEB8C100C6CEB8 /* AirshipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 756D5BC821CEB32000C6CEB8 /* AirshipKit.framework */; };
-		756D5BD621CEB8C100C6CEB8 /* AirshipKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 756D5BC821CEB32000C6CEB8 /* AirshipKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		756D5BDA21CEC2DB00C6CEB8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 756D5BD921CEC2DB00C6CEB8 /* GoogleService-Info.plist */; };
 		7574A4F221C83C4E0076AB27 /* GVMyGroopsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7574A4F021C83C4E0076AB27 /* GVMyGroopsController.h */; };
 		7574A4F321C83C4E0076AB27 /* GVMyGroopsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7574A4F121C83C4E0076AB27 /* GVMyGroopsController.m */; };
@@ -86,6 +94,8 @@
 		7574A50221C83E970076AB27 /* GVParticipant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7574A50021C83E970076AB27 /* GVParticipant.m */; };
 		7574A50521C84AFC0076AB27 /* GVGroopDetailController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7574A50321C84AFC0076AB27 /* GVGroopDetailController.h */; };
 		7574A50621C84AFC0076AB27 /* GVGroopDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7574A50421C84AFC0076AB27 /* GVGroopDetailController.m */; };
+		757C03E821D7B32E00F72C89 /* AirshipKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 757C03DD21D7B31900F72C89 /* AirshipKit.framework */; };
+		757C03E921D7B32E00F72C89 /* AirshipKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 757C03DD21D7B31900F72C89 /* AirshipKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		758440E621C55B2400716745 /* Groopview.h in Headers */ = {isa = PBXBuildFile; fileRef = 758440E421C55B2400716745 /* Groopview.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		758440F421C55B3700716745 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 758440F321C55B3700716745 /* AppDelegate.m */; };
 		758440F721C55B3700716745 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 758440F621C55B3700716745 /* ViewController.m */; };
@@ -93,24 +103,17 @@
 		758440FC21C55B3700716745 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 758440FB21C55B3700716745 /* Assets.xcassets */; };
 		758440FF21C55B3700716745 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 758440FD21C55B3700716745 /* LaunchScreen.storyboard */; };
 		7584410221C55B3700716745 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7584410121C55B3700716745 /* main.m */; };
-		7584410721C5603100716745 /* sdkm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 758440E121C55B2400716745 /* sdkm.framework */; };
-		7584410821C5603100716745 /* sdkm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 758440E121C55B2400716745 /* sdkm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7584410721C5603100716745 /* Groopview.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 758440E121C55B2400716745 /* Groopview.framework */; };
+		7584410821C5603100716745 /* Groopview.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 758440E121C55B2400716745 /* Groopview.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7584411621C5752E00716745 /* GVGroopviewMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 7584411321C5752E00716745 /* GVGroopviewMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7584411721C5752E00716745 /* GVGroopviewMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7584411421C5752E00716745 /* GVGroopviewMenu.m */; };
 		7584411821C5752E00716745 /* GVGroopviewMenuDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7584411521C5752E00716745 /* GVGroopviewMenuDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7584411F21C5763D00716745 /* menu_future.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584411A21C5763D00716745 /* menu_future.png */; };
-		7584412021C5763D00716745 /* menu_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584411B21C5763D00716745 /* menu_background.png */; };
-		7584412121C5763D00716745 /* menu_start.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584411C21C5763D00716745 /* menu_start.png */; };
-		7584412221C5763D00716745 /* menu_star.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584411D21C5763D00716745 /* menu_star.png */; };
-		7584412321C5763D00716745 /* menu_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584411E21C5763D00716745 /* menu_button.png */; };
-		7584412521C57CA400716745 /* PrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = 7584412421C57AA100716745 /* PrefixHeader.pch */; settings = {ATTRIBUTES = (Private, ); }; };
+		7584412521C57CA400716745 /* PrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = 7584412421C57AA100716745 /* PrefixHeader.pch */; };
 		7584412B21C584F400716745 /* GVGlobal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7584412921C584F400716745 /* GVGlobal.h */; };
 		7584412C21C584F400716745 /* GVGlobal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7584412A21C584F400716745 /* GVGlobal.m */; };
 		7584412E21C64B0600716745 /* Groopview.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7584412D21C64B0600716745 /* Groopview.storyboard */; };
 		7584413121C64B6300716745 /* GVPhoneNumberController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7584412F21C64B6300716745 /* GVPhoneNumberController.h */; };
 		7584413221C64B6300716745 /* GVPhoneNumberController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7584413021C64B6300716745 /* GVPhoneNumberController.m */; };
-		7584413521C64C8D00716745 /* corner_quarter.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584413321C64C8C00716745 /* corner_quarter.png */; };
-		7584413621C64C8D00716745 /* arrow_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 7584413421C64C8D00716745 /* arrow_left.png */; };
 		7584413A21C64F4A00716745 /* AFViewShaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 7584413821C64F4A00716745 /* AFViewShaker.h */; };
 		7584413B21C64F4A00716745 /* AFViewShaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7584413921C64F4A00716745 /* AFViewShaker.m */; };
 		7584414121C6502000716745 /* CountryPicker.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7584413D21C6502000716745 /* CountryPicker.bundle */; };
@@ -130,9 +133,9 @@
 		758B93A021C9A04C009BD4CB /* GVNotificationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 758B939E21C9A04C009BD4CB /* GVNotificationsController.m */; };
 		758B93A321C9A0C5009BD4CB /* GVNotificationCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B93A121C9A0C5009BD4CB /* GVNotificationCell.h */; };
 		758B93A421C9A0C5009BD4CB /* GVNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 758B93A221C9A0C5009BD4CB /* GVNotificationCell.m */; };
-		758B93A821C9A179009BD4CB /* GVNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B93A621C9A179009BD4CB /* GVNotification.h */; };
+		758B93A821C9A179009BD4CB /* GVNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B93A621C9A179009BD4CB /* GVNotification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		758B93A921C9A179009BD4CB /* GVNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 758B93A721C9A179009BD4CB /* GVNotification.m */; };
-		758B93AC21C9E751009BD4CB /* GVNotificationAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B93AA21C9E751009BD4CB /* GVNotificationAlertController.h */; };
+		758B93AC21C9E751009BD4CB /* GVNotificationAlertController.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B93AA21C9E751009BD4CB /* GVNotificationAlertController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		758B93AD21C9E751009BD4CB /* GVNotificationAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 758B93AB21C9E751009BD4CB /* GVNotificationAlertController.m */; };
 		758B93B021C9F4A0009BD4CB /* GVGroopviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 758B93AE21C9F4A0009BD4CB /* GVGroopviewController.h */; };
 		758B93B121C9F4A0009BD4CB /* GVGroopviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 758B93AF21C9F4A0009BD4CB /* GVGroopviewController.m */; };
@@ -152,57 +155,56 @@
 		75AAB9FA21CEC97B00556B5B /* GVLocationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 75AAB9F821CEC97B00556B5B /* GVLocationService.m */; };
 		75FAB4BA21C74A680061C60D /* NSString+Category.h in Headers */ = {isa = PBXBuildFile; fileRef = 75FAB4B821C74A680061C60D /* NSString+Category.h */; };
 		75FAB4BB21C74A680061C60D /* NSString+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 75FAB4B921C74A680061C60D /* NSString+Category.m */; };
-		75FAB4BD21C7AE4D0061C60D /* add_contact_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 75FAB4BC21C7AE4D0061C60D /* add_contact_red.png */; };
 		75FAB4BF21C7AFAB0061C60D /* sdkm.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75FAB4BE21C7AFAB0061C60D /* sdkm.xcassets */; };
 		AB022B1F69379EC7412C3E04 /* libPods-sdktest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 197567623E3F9246D1EF4D76 /* libPods-sdktest.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		756D5BC721CEB32000C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03DC21D7B31900F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 494DD9571B0EB677009C134E;
 			remoteInfo = AirshipKit;
 		};
-		756D5BC921CEB32000C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03DE21D7B31900F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CC8999771D8B625500A0CECC;
 			remoteInfo = AirshipResources;
 		};
-		756D5BCB21CEB32000C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03E021D7B31900F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DF6DD6561E7A1EB8000C281A;
 			remoteInfo = "AirshipKit tvOS";
 		};
-		756D5BCD21CEB32000C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03E221D7B31900F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DF7E739E1E7B3F0A0039F65D;
 			remoteInfo = "AirshipResources tvOS";
 		};
-		756D5BCF21CEB32000C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03E421D7B31900F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CC899CD01D8B712D00A0CECC;
 			remoteInfo = AirshipLib;
 		};
-		756D5BD121CEB32000C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03E621D7B31900F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CC64F0541D8B77E3009CEF27;
 			remoteInfo = AirshipKitTests;
 		};
-		756D5BD721CEB8C100C6CEB8 /* PBXContainerItemProxy */ = {
+		757C03EA21D7B32E00F72C89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+			containerPortal = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 494DD9561B0EB677009C134E;
 			remoteInfo = AirshipKit;
@@ -223,8 +225,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				756D5BD621CEB8C100C6CEB8 /* AirshipKit.framework in Embed Frameworks */,
-				7584410821C5603100716745 /* sdkm.framework in Embed Frameworks */,
+				757C03E921D7B32E00F72C89 /* AirshipKit.framework in Embed Frameworks */,
+				7584410821C5603100716745 /* Groopview.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,6 +246,8 @@
 		197567623E3F9246D1EF4D76 /* libPods-sdktest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sdktest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44B1E8A19A8278A91319C45E /* Pods-sdktest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sdktest.debug.xcconfig"; path = "Target Support Files/Pods-sdktest/Pods-sdktest.debug.xcconfig"; sourceTree = "<group>"; };
 		4CF350D7FB71611C3F8DB241 /* libPods-sdkm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sdkm.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		751EE39D21F648F3002EBB70 /* ReactionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReactionsView.h; sourceTree = "<group>"; };
+		751EE39E21F648F3002EBB70 /* ReactionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactionsView.m; sourceTree = "<group>"; };
 		754E01C221C66DD200DDBCD8 /* AFCompatibilityMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFCompatibilityMacros.h; sourceTree = "<group>"; };
 		754E01C321C66DD200DDBCD8 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		754E01C421C66DD200DDBCD8 /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
@@ -286,18 +290,12 @@
 		754E021021C68E3B00DDBCD8 /* GVService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVService.m; sourceTree = "<group>"; };
 		754E021321C6B4D800DDBCD8 /* GVStartGroopviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVStartGroopviewController.h; sourceTree = "<group>"; };
 		754E021421C6B4D800DDBCD8 /* GVStartGroopviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVStartGroopviewController.m; sourceTree = "<group>"; };
-		754E021721C6B62000DDBCD8 /* home_map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home_map.png; sourceTree = "<group>"; };
-		754E021921C6B6AD00DDBCD8 /* create_groop_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create_groop_gray.png; sourceTree = "<group>"; };
-		754E021A21C6B6AD00DDBCD8 /* existing_groop_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = existing_groop_gray.png; sourceTree = "<group>"; };
 		754E022221C6BBFD00DDBCD8 /* UIView+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Category.h"; sourceTree = "<group>"; };
 		754E022321C6BBFD00DDBCD8 /* UIView+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+Category.m"; sourceTree = "<group>"; };
 		754E022621C6D50D00DDBCD8 /* GVBaseNavController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVBaseNavController.h; sourceTree = "<group>"; };
 		754E022721C6D50D00DDBCD8 /* GVBaseNavController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVBaseNavController.m; sourceTree = "<group>"; };
 		754E022A21C6D56D00DDBCD8 /* GVCreateGroopController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVCreateGroopController.h; sourceTree = "<group>"; };
 		754E022B21C6D56D00DDBCD8 /* GVCreateGroopController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVCreateGroopController.m; sourceTree = "<group>"; };
-		754E022E21C6D73E00DDBCD8 /* add_contact_dark_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_contact_dark_gray.png; sourceTree = "<group>"; };
-		754E023021C6D7E900DDBCD8 /* add_contact_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_contact_bottom.png; sourceTree = "<group>"; };
-		754E023221C6D82E00DDBCD8 /* delete_contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_contact.png; sourceTree = "<group>"; };
 		754E023521C6D8BE00DDBCD8 /* GVCircleImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVCircleImageView.h; sourceTree = "<group>"; };
 		754E023621C6D8BE00DDBCD8 /* GVCircleImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVCircleImageView.m; sourceTree = "<group>"; };
 		754E023A21C6D92800DDBCD8 /* GVContactCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVContactCell.h; sourceTree = "<group>"; };
@@ -310,7 +308,6 @@
 		756D5BB821CD434100C6CEB8 /* UIColor+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Category.h"; sourceTree = "<group>"; };
 		756D5BB921CD434100C6CEB8 /* UIColor+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Category.m"; sourceTree = "<group>"; };
 		756D5BBC21CEAEB900C6CEB8 /* sdktest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sdktest.entitlements; sourceTree = "<group>"; };
-		756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AirshipKit.xcodeproj; path = sdktest/AirshipKit/AirshipKit.xcodeproj; sourceTree = SOURCE_ROOT; };
 		756D5BD321CEB66200C6CEB8 /* AirshipConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirshipConfig.plist; sourceTree = "<group>"; };
 		756D5BD921CEC2DB00C6CEB8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7574A4F021C83C4E0076AB27 /* GVMyGroopsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVMyGroopsController.h; sourceTree = "<group>"; };
@@ -323,7 +320,8 @@
 		7574A50021C83E970076AB27 /* GVParticipant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVParticipant.m; sourceTree = "<group>"; };
 		7574A50321C84AFC0076AB27 /* GVGroopDetailController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVGroopDetailController.h; sourceTree = "<group>"; };
 		7574A50421C84AFC0076AB27 /* GVGroopDetailController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVGroopDetailController.m; sourceTree = "<group>"; };
-		758440E121C55B2400716745 /* sdkm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = sdkm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AirshipKit.xcodeproj; path = AirshipKit/AirshipKit.xcodeproj; sourceTree = "<group>"; };
+		758440E121C55B2400716745 /* Groopview.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Groopview.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		758440E421C55B2400716745 /* Groopview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Groopview.h; sourceTree = "<group>"; };
 		758440E521C55B2400716745 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		758440F021C55B3700716745 /* sdktest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sdktest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -339,19 +337,12 @@
 		7584411321C5752E00716745 /* GVGroopviewMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GVGroopviewMenu.h; sourceTree = "<group>"; };
 		7584411421C5752E00716745 /* GVGroopviewMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GVGroopviewMenu.m; sourceTree = "<group>"; };
 		7584411521C5752E00716745 /* GVGroopviewMenuDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GVGroopviewMenuDelegate.h; sourceTree = "<group>"; };
-		7584411A21C5763D00716745 /* menu_future.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_future.png; sourceTree = "<group>"; };
-		7584411B21C5763D00716745 /* menu_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_background.png; sourceTree = "<group>"; };
-		7584411C21C5763D00716745 /* menu_start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_start.png; sourceTree = "<group>"; };
-		7584411D21C5763D00716745 /* menu_star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_star.png; sourceTree = "<group>"; };
-		7584411E21C5763D00716745 /* menu_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_button.png; sourceTree = "<group>"; };
 		7584412421C57AA100716745 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		7584412921C584F400716745 /* GVGlobal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVGlobal.h; sourceTree = "<group>"; };
 		7584412A21C584F400716745 /* GVGlobal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVGlobal.m; sourceTree = "<group>"; };
 		7584412D21C64B0600716745 /* Groopview.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Groopview.storyboard; sourceTree = "<group>"; };
 		7584412F21C64B6300716745 /* GVPhoneNumberController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVPhoneNumberController.h; sourceTree = "<group>"; };
 		7584413021C64B6300716745 /* GVPhoneNumberController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVPhoneNumberController.m; sourceTree = "<group>"; };
-		7584413321C64C8C00716745 /* corner_quarter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = corner_quarter.png; sourceTree = "<group>"; };
-		7584413421C64C8D00716745 /* arrow_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_left.png; sourceTree = "<group>"; };
 		7584413821C64F4A00716745 /* AFViewShaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFViewShaker.h; sourceTree = "<group>"; };
 		7584413921C64F4A00716745 /* AFViewShaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFViewShaker.m; sourceTree = "<group>"; };
 		7584413D21C6502000716745 /* CountryPicker.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = CountryPicker.bundle; sourceTree = "<group>"; };
@@ -385,7 +376,6 @@
 		758B93C221CA0734009BD4CB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		758B93C421CA073B009BD4CB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		758B93C621CA074B009BD4CB /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		75A21B2D21CA4F8A0051C4E0 /* libVideo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libVideo.a; path = sdkm/Video/lib/libVideo.a; sourceTree = "<group>"; };
 		75A21B3021CA9A450051C4E0 /* GVUpcomingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GVUpcomingController.h; sourceTree = "<group>"; };
 		75A21B3121CA9A450051C4E0 /* GVUpcomingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVUpcomingController.m; sourceTree = "<group>"; };
 		75A21B3521CA9DC60051C4E0 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
@@ -403,7 +393,6 @@
 		75AAB9F821CEC97B00556B5B /* GVLocationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GVLocationService.m; sourceTree = "<group>"; };
 		75FAB4B821C74A680061C60D /* NSString+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Category.h"; sourceTree = "<group>"; };
 		75FAB4B921C74A680061C60D /* NSString+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Category.m"; sourceTree = "<group>"; };
-		75FAB4BC21C7AE4D0061C60D /* add_contact_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_contact_red.png; sourceTree = "<group>"; };
 		75FAB4BE21C7AFAB0061C60D /* sdkm.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = sdkm.xcassets; sourceTree = "<group>"; };
 		A0D75DF54893B9DF8283729D /* Pods-sdktest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sdktest.release.xcconfig"; path = "Target Support Files/Pods-sdktest/Pods-sdktest.release.xcconfig"; sourceTree = "<group>"; };
 		B4F4CBDA1374CEE607FD061B /* Pods-sdkm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sdkm.debug.xcconfig"; path = "Target Support Files/Pods-sdkm/Pods-sdkm.debug.xcconfig"; sourceTree = "<group>"; };
@@ -423,15 +412,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				756D5BD521CEB8C100C6CEB8 /* AirshipKit.framework in Frameworks */,
-				7584410721C5603100716745 /* sdkm.framework in Frameworks */,
+				7584410721C5603100716745 /* Groopview.framework in Frameworks */,
 				AB022B1F69379EC7412C3E04 /* libPods-sdktest.a in Frameworks */,
+				757C03E821D7B32E00F72C89 /* AirshipKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		751EE39C21F648F3002EBB70 /* ReactionsView */ = {
+			isa = PBXGroup;
+			children = (
+				751EE39D21F648F3002EBB70 /* ReactionsView.h */,
+				751EE39E21F648F3002EBB70 /* ReactionsView.m */,
+			);
+			path = ReactionsView;
+			sourceTree = "<group>";
+		};
 		754E01C121C66DD200DDBCD8 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
@@ -541,28 +539,6 @@
 			path = GVStartButton;
 			sourceTree = "<group>";
 		};
-		756D5BBD21CEB30E00C6CEB8 /* AirshipKit */ = {
-			isa = PBXGroup;
-			children = (
-				756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */,
-			);
-			name = AirshipKit;
-			path = "New Group";
-			sourceTree = "<group>";
-		};
-		756D5BBF21CEB32000C6CEB8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				756D5BC821CEB32000C6CEB8 /* AirshipKit.framework */,
-				756D5BCA21CEB32000C6CEB8 /* AirshipResources.bundle */,
-				756D5BCC21CEB32000C6CEB8 /* AirshipKit.framework */,
-				756D5BCE21CEB32000C6CEB8 /* AirshipResources tvOS.bundle */,
-				756D5BD021CEB32000C6CEB8 /* libUAirship.a */,
-				756D5BD221CEB32000C6CEB8 /* AirshipKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		7574A4F421C83CC20076AB27 /* CollectionViewCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -590,6 +566,19 @@
 			path = GVParticipant;
 			sourceTree = "<group>";
 		};
+		757C03D421D7B31800F72C89 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				757C03DD21D7B31900F72C89 /* AirshipKit.framework */,
+				757C03DF21D7B31900F72C89 /* AirshipResources.bundle */,
+				757C03E121D7B31900F72C89 /* AirshipKit.framework */,
+				757C03E321D7B31900F72C89 /* AirshipResources tvOS.bundle */,
+				757C03E521D7B31900F72C89 /* libUAirship.a */,
+				757C03E721D7B31900F72C89 /* AirshipKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		758440D721C55B2400716745 = {
 			isa = PBXGroup;
 			children = (
@@ -604,7 +593,7 @@
 		758440E221C55B2400716745 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				758440E121C55B2400716745 /* sdkm.framework */,
+				758440E121C55B2400716745 /* Groopview.framework */,
 				758440F021C55B3700716745 /* sdktest.app */,
 			);
 			name = Products;
@@ -613,7 +602,6 @@
 		758440E321C55B2400716745 /* sdkm */ = {
 			isa = PBXGroup;
 			children = (
-				7584411921C5757E00716745 /* Resource */,
 				7584412821C584DC00716745 /* Utils */,
 				754E020A21C68C6B00DDBCD8 /* Service */,
 				7584414521C6538400716745 /* Models */,
@@ -630,9 +618,9 @@
 		758440F121C55B3700716745 /* sdktest */ = {
 			isa = PBXGroup;
 			children = (
+				757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */,
 				756D5BD921CEC2DB00C6CEB8 /* GoogleService-Info.plist */,
 				756D5BD321CEB66200C6CEB8 /* AirshipConfig.plist */,
-				756D5BBD21CEB30E00C6CEB8 /* AirshipKit */,
 				756D5BBC21CEAEB900C6CEB8 /* sdktest.entitlements */,
 				758440F221C55B3700716745 /* AppDelegate.h */,
 				758440F321C55B3700716745 /* AppDelegate.m */,
@@ -708,30 +696,10 @@
 			path = GVGroopviewMenu;
 			sourceTree = "<group>";
 		};
-		7584411921C5757E00716745 /* Resource */ = {
-			isa = PBXGroup;
-			children = (
-				75FAB4BC21C7AE4D0061C60D /* add_contact_red.png */,
-				754E023221C6D82E00DDBCD8 /* delete_contact.png */,
-				754E023021C6D7E900DDBCD8 /* add_contact_bottom.png */,
-				754E022E21C6D73E00DDBCD8 /* add_contact_dark_gray.png */,
-				754E021921C6B6AD00DDBCD8 /* create_groop_gray.png */,
-				754E021A21C6B6AD00DDBCD8 /* existing_groop_gray.png */,
-				754E021721C6B62000DDBCD8 /* home_map.png */,
-				7584413421C64C8D00716745 /* arrow_left.png */,
-				7584413321C64C8C00716745 /* corner_quarter.png */,
-				7584411B21C5763D00716745 /* menu_background.png */,
-				7584411E21C5763D00716745 /* menu_button.png */,
-				7584411A21C5763D00716745 /* menu_future.png */,
-				7584411D21C5763D00716745 /* menu_star.png */,
-				7584411C21C5763D00716745 /* menu_start.png */,
-			);
-			path = Resource;
-			sourceTree = "<group>";
-		};
 		7584412821C584DC00716745 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				751EE39C21F648F3002EBB70 /* ReactionsView */,
 				754E022121C6BBED00DDBCD8 /* Categories */,
 				75A21B3421CA9DC60051C4E0 /* iCarousel */,
 				754E01C121C66DD200DDBCD8 /* AFNetworking */,
@@ -806,7 +774,6 @@
 		758B93B221C9F692009BD4CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				75A21B2D21CA4F8A0051C4E0 /* libVideo.a */,
 				758B93C621CA074B009BD4CB /* libc++.tbd */,
 				758B93C421CA073B009BD4CB /* SystemConfiguration.framework */,
 				758B93C221CA0734009BD4CB /* CoreMedia.framework */,
@@ -858,28 +825,31 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				754E024021C6DBB100DDBCD8 /* GVBaseController.h in Headers */,
+				754E022821C6D50D00DDBCD8 /* GVBaseNavController.h in Headers */,
 				754E01F121C66DD200DDBCD8 /* AFURLSessionManager.h in Headers */,
 				75A21B3821CA9DC60051C4E0 /* iCarousel.h in Headers */,
 				756D5BB421CD3B9700C6CEB8 /* GVStartButton.h in Headers */,
 				7584414921C653A900716745 /* GVUser.h in Headers */,
 				75A21B4221CAA9450051C4E0 /* GVUpcomingView.h in Headers */,
+				758B93A821C9A179009BD4CB /* GVNotification.h in Headers */,
+				758B93AC21C9E751009BD4CB /* GVNotificationAlertController.h in Headers */,
 				758440E621C55B2400716745 /* Groopview.h in Headers */,
 				7584414E21C65BE700716745 /* GVShared.h in Headers */,
+				7584412521C57CA400716745 /* PrefixHeader.pch in Headers */,
 				754E01F321C66DD200DDBCD8 /* AFAutoPurgingImageCache.h in Headers */,
 				754E021521C6B4D800DDBCD8 /* GVStartGroopviewController.h in Headers */,
 				754E023C21C6D92800DDBCD8 /* GVContactCell.h in Headers */,
 				7584413A21C64F4A00716745 /* AFViewShaker.h in Headers */,
 				754E01FE21C66DD200DDBCD8 /* UIImageView+AFNetworking.h in Headers */,
-				754E022821C6D50D00DDBCD8 /* GVBaseNavController.h in Headers */,
 				754E01ED21C66DD200DDBCD8 /* AFURLRequestSerialization.h in Headers */,
 				754E01FD21C66DD200DDBCD8 /* UIImage+AFNetworking.h in Headers */,
 				754E020D21C68C9700DDBCD8 /* GVBaseService.h in Headers */,
 				7584418F21C6620900716745 /* GVConfirmCodeController.h in Headers */,
+				751EE3A421F648F4002EBB70 /* ReactionsView.h in Headers */,
 				754E01E821C66DD200DDBCD8 /* AFNetworking.h in Headers */,
 				758B939F21C9A04C009BD4CB /* GVNotificationsController.h in Headers */,
 				7584411621C5752E00716745 /* GVGroopviewMenu.h in Headers */,
-				754E024021C6DBB100DDBCD8 /* GVBaseController.h in Headers */,
-				758B93AC21C9E751009BD4CB /* GVNotificationAlertController.h in Headers */,
 				7574A50521C84AFC0076AB27 /* GVGroopDetailController.h in Headers */,
 				754E01E521C66DD200DDBCD8 /* AFCompatibilityMacros.h in Headers */,
 				7584418B21C65FF500716745 /* MBProgressHUD.h in Headers */,
@@ -893,7 +863,6 @@
 				754E01E621C66DD200DDBCD8 /* AFHTTPSessionManager.h in Headers */,
 				758B93B021C9F4A0009BD4CB /* GVGroopviewController.h in Headers */,
 				758B939B21C98F7B009BD4CB /* GVSetTimeController.h in Headers */,
-				7584412521C57CA400716745 /* PrefixHeader.pch in Headers */,
 				754E022C21C6D56D00DDBCD8 /* GVCreateGroopController.h in Headers */,
 				75A21B3D21CAA7860051C4E0 /* NSMutableAttributedString+Category.h in Headers */,
 				754E01EB21C66DD200DDBCD8 /* AFSecurityPolicy.h in Headers */,
@@ -915,7 +884,6 @@
 				75AAB9F921CEC97B00556B5B /* GVLocationService.h in Headers */,
 				754E01F721C66DD200DDBCD8 /* AFNetworkActivityIndicatorManager.h in Headers */,
 				75FAB4BA21C74A680061C60D /* NSString+Category.h in Headers */,
-				758B93A821C9A179009BD4CB /* GVNotification.h in Headers */,
 				75A21B4B21CAE9DC0051C4E0 /* UIImage+Category.h in Headers */,
 				754E023721C6D8BE00DDBCD8 /* GVCircleImageView.h in Headers */,
 			);
@@ -941,7 +909,7 @@
 			);
 			name = sdkm;
 			productName = sdkm;
-			productReference = 758440E121C55B2400716745 /* sdkm.framework */;
+			productReference = 758440E121C55B2400716745 /* Groopview.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		758440EF21C55B3700716745 /* sdktest */ = {
@@ -959,7 +927,7 @@
 			);
 			dependencies = (
 				7584410A21C5603100716745 /* PBXTargetDependency */,
-				756D5BD821CEB8C100C6CEB8 /* PBXTargetDependency */,
+				757C03EB21D7B32E00F72C89 /* PBXTargetDependency */,
 			);
 			name = sdktest;
 			productName = sdktest;
@@ -989,6 +957,9 @@
 							};
 						};
 					};
+					759310E721D4098900E76232 = {
+						CreatedOnToolsVersion = 10.1;
+					};
 				};
 			};
 			buildConfigurationList = 758440DB21C55B2400716745 /* Build configuration list for PBXProject "sdkm" */;
@@ -1004,59 +975,60 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 756D5BBF21CEB32000C6CEB8 /* Products */;
-					ProjectRef = 756D5BBE21CEB32000C6CEB8 /* AirshipKit.xcodeproj */;
+					ProductGroup = 757C03D421D7B31800F72C89 /* Products */;
+					ProjectRef = 757C03D321D7B31800F72C89 /* AirshipKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
 				758440E021C55B2400716745 /* sdkm */,
 				758440EF21C55B3700716745 /* sdktest */,
+				759310E721D4098900E76232 /* Groopview-Universal */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		756D5BC821CEB32000C6CEB8 /* AirshipKit.framework */ = {
+		757C03DD21D7B31900F72C89 /* AirshipKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AirshipKit.framework;
-			remoteRef = 756D5BC721CEB32000C6CEB8 /* PBXContainerItemProxy */;
+			remoteRef = 757C03DC21D7B31900F72C89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		756D5BCA21CEB32000C6CEB8 /* AirshipResources.bundle */ = {
+		757C03DF21D7B31900F72C89 /* AirshipResources.bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = AirshipResources.bundle;
-			remoteRef = 756D5BC921CEB32000C6CEB8 /* PBXContainerItemProxy */;
+			remoteRef = 757C03DE21D7B31900F72C89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		756D5BCC21CEB32000C6CEB8 /* AirshipKit.framework */ = {
+		757C03E121D7B31900F72C89 /* AirshipKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AirshipKit.framework;
-			remoteRef = 756D5BCB21CEB32000C6CEB8 /* PBXContainerItemProxy */;
+			remoteRef = 757C03E021D7B31900F72C89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		756D5BCE21CEB32000C6CEB8 /* AirshipResources tvOS.bundle */ = {
+		757C03E321D7B31900F72C89 /* AirshipResources tvOS.bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "AirshipResources tvOS.bundle";
-			remoteRef = 756D5BCD21CEB32000C6CEB8 /* PBXContainerItemProxy */;
+			remoteRef = 757C03E221D7B31900F72C89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		756D5BD021CEB32000C6CEB8 /* libUAirship.a */ = {
+		757C03E521D7B31900F72C89 /* libUAirship.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libUAirship.a;
-			remoteRef = 756D5BCF21CEB32000C6CEB8 /* PBXContainerItemProxy */;
+			remoteRef = 757C03E421D7B31900F72C89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		756D5BD221CEB32000C6CEB8 /* AirshipKitTests.xctest */ = {
+		757C03E721D7B31900F72C89 /* AirshipKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = AirshipKitTests.xctest;
-			remoteRef = 756D5BD121CEB32000C6CEB8 /* PBXContainerItemProxy */;
+			remoteRef = 757C03E621D7B31900F72C89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1066,25 +1038,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7584412021C5763D00716745 /* menu_background.png in Resources */,
-				754E023121C6D7EA00DDBCD8 /* add_contact_bottom.png in Resources */,
-				754E023321C6D82E00DDBCD8 /* delete_contact.png in Resources */,
-				7584411F21C5763D00716745 /* menu_future.png in Resources */,
-				75FAB4BD21C7AE4D0061C60D /* add_contact_red.png in Resources */,
 				75FAB4BF21C7AFAB0061C60D /* sdkm.xcassets in Resources */,
-				7584412321C5763D00716745 /* menu_button.png in Resources */,
-				7584413521C64C8D00716745 /* corner_quarter.png in Resources */,
 				7584414121C6502000716745 /* CountryPicker.bundle in Resources */,
 				75A21B4521CAA9520051C4E0 /* GVUpcomingView.xib in Resources */,
-				754E022F21C6D73E00DDBCD8 /* add_contact_dark_gray.png in Resources */,
-				754E021821C6B62100DDBCD8 /* home_map.png in Resources */,
 				7584412E21C64B0600716745 /* Groopview.storyboard in Resources */,
-				754E021B21C6B6AD00DDBCD8 /* create_groop_gray.png in Resources */,
-				7584412221C5763D00716745 /* menu_star.png in Resources */,
-				7584413621C64C8D00716745 /* arrow_left.png in Resources */,
-				7584412121C5763D00716745 /* menu_start.png in Resources */,
 				756D5BB721CD3BBD00C6CEB8 /* GVStartButton.xib in Resources */,
-				754E021C21C6B6AD00DDBCD8 /* existing_groop_gray.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1103,6 +1061,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		759310EB21D409C700E76232 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#!/bin/sh\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${PROJECT_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\n# Step 5. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework\" \"${PROJECT_DIR}\"\n\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"\n";
+		};
 		891151C0D93E2F6FB50EE4D7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1187,6 +1162,7 @@
 				754E021221C68E3B00DDBCD8 /* GVService.m in Sources */,
 				754E01EC21C66DD200DDBCD8 /* AFSecurityPolicy.m in Sources */,
 				75A21B3321CA9A450051C4E0 /* GVUpcomingController.m in Sources */,
+				751EE3A521F648F4002EBB70 /* ReactionsView.m in Sources */,
 				7574A50621C84AFC0076AB27 /* GVGroopDetailController.m in Sources */,
 				754E01FC21C66DD200DDBCD8 /* UIButton+AFNetworking.m in Sources */,
 				75A21B3921CA9DC60051C4E0 /* iCarousel.m in Sources */,
@@ -1247,10 +1223,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		756D5BD821CEB8C100C6CEB8 /* PBXTargetDependency */ = {
+		757C03EB21D7B32E00F72C89 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AirshipKit;
-			targetProxy = 756D5BD721CEB8C100C6CEB8 /* PBXContainerItemProxy */;
+			targetProxy = 757C03EA21D7B32E00F72C89 /* PBXContainerItemProxy */;
 		};
 		7584410A21C5603100716745 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1401,6 +1377,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B4F4CBDA1374CEE607FD061B /* Pods-sdkm.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				BITCODE_GENERATION_MODE = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -1408,6 +1386,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/sdkm/Frameworks",
@@ -1416,7 +1395,7 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = sdkm/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1426,15 +1405,19 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sdkm/Video/lib",
 				);
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.groopview.sdkm;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Groopview;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
+				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
 			};
 			name = Debug;
 		};
@@ -1442,6 +1425,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8E6A561F132F16F7E3B6B2D /* Pods-sdkm.release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				BITCODE_GENERATION_MODE = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -1449,6 +1434,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/sdkm/Frameworks",
@@ -1457,7 +1443,7 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = sdkm/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1467,12 +1453,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/sdkm/Video/lib",
 				);
+				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.groopview.sdkm;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Groopview;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1487,6 +1474,32 @@
 				CODE_SIGN_ENTITLEMENTS = sdktest/sdktest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 634U3XNGKQ;
+				ENABLE_BITCODE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = sdktest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.groopview.sdktest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
+				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
+			};
+			name = Debug;
+		};
+		7584410521C55B3700716745 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0D75DF54893B9DF8283729D /* Pods-sdktest.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = sdktest/sdktest.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 634U3XNGKQ;
+				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = sdktest/Info.plist;
@@ -1499,27 +1512,25 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = Release;
 		};
-		7584410521C55B3700716745 /* Release */ = {
+		759310E921D4098900E76232 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0D75DF54893B9DF8283729D /* Pods-sdktest.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = sdktest/sdktest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 634U3XNGKQ;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				INFOPLIST_FILE = sdktest/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.groopview.sdktest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e armv7 armv7s";
+				"VALID_ARCHS[sdk=iphonesimulator*]" = x86_64;
+			};
+			name = Debug;
+		};
+		759310EA21D4098900E76232 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 634U3XNGKQ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1549,6 +1560,15 @@
 			buildConfigurations = (
 				7584410421C55B3700716745 /* Debug */,
 				7584410521C55B3700716745 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		759310E821D4098900E76232 /* Build configuration list for PBXAggregateTarget "Groopview-Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				759310E921D4098900E76232 /* Debug */,
+				759310EA21D4098900E76232 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

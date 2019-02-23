@@ -7,7 +7,7 @@
 //
 
 #import "ChooseVideoController.h"
-#import <sdkm/Groopview.h>
+#import <Groopview/Groopview.h>
 
 @interface ChooseVideoController () <GVStartButtonDelegate> {
     

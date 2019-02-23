@@ -25,14 +25,6 @@ typedef enum : NSUInteger {
 
 @interface GVCreateGroopController : GVBaseNavController
 
-@property (weak, nonatomic) IBOutlet UIView *viewBottom;
-@property (weak, nonatomic) IBOutlet UITableView *tblContacts;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *segSection;
-
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *removeButtons;
-@property (strong, nonatomic) IBOutletCollection(GVCircleImageView) NSArray *groopAvatars;
-@property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *groopShortNames;
-
 @property GVCreateGroopViewType viewType;
 @property (nonatomic, weak) id <GVCreateGroopControllerDelegate> delegate;
 

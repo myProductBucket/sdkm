@@ -13,10 +13,6 @@
 
 @interface GVConfirmCodeController : GVBaseController
 
-@property (weak, nonatomic) IBOutlet UILabel *lblPhoneNumber;
-@property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *txtCodes;
-@property (weak, nonatomic) IBOutlet UIButton *btnContinue;
-
 @end
 
 //NS_ASSUME_NONNULL_END

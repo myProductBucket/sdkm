@@ -7,6 +7,8 @@
 //
 
 #import "GVNotificationsController.h"
+#import "GVNotificationAlertController.h"
+#import "GVGroopviewController.h"
 #import "GVNotificationCell.h"
 #import "GVNotification.h"
 
@@ -27,12 +29,24 @@
     // Do any additional setup after loading the view.
     
     [self initLayout];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:GV_ALERT_DISMISSED object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        if (note.userInfo
+            && [note.userInfo objectForKey:@"groopview_id"]) {
+            NSString *groopviewId = [note.userInfo objectForKey:@"groopview_id"];
+            GVGroopviewController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVGroopviewController"];
+            [vc setGroopviewId:groopviewId];
+            [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+    }];
+    
+    [self getUserNotifications:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [self getUserNotifications:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,6 +69,7 @@
 - (void)initLayout {
     
     [self.navigationItem setTitle:@"Notifications"];
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"back" style:UIBarButtonItemStyleDone target:self action:@selector(didClickBack)]];
     
     [self.tblNotifications setDelegate:self];
     [self.tblNotifications setDataSource:self];
@@ -90,14 +105,19 @@
                     [self.lblNotFound setHidden:YES];
                 }
                 [self.tblNotifications reloadData];
+                
+                // Init Alert Stack
+                [[GVShared shared].arrAlerts removeAllObjects];
             }
-        } else if ([res isKindOfClass:[NSError class]]) {
+        }
+        else if ([res isKindOfClass:[NSError class]]) {
             NSError *error = res;
             [GVGlobal showAlertWithTitle:GROOPVIEW
                                  message:error.localizedDescription
                                 fromView:self
                           withCompletion:nil];
-        } else {
+        }
+        else {
             [GVGlobal showAlertWithTitle:GROOPVIEW
                                  message:GV_ERROR_MESSAGE
                                 fromView:self
@@ -111,18 +131,20 @@
     //    [[AppDelegate appDelegate] getCountOfUnreadNotifications];
 }
 
-- (void)removeNotification:(NSInteger)index {
+- (void)removeNotification:(NSIndexPath *)indexPath {
     
-    if (index >= self.arrNotifications.count) {
+    if (indexPath.row >= self.arrNotifications.count) {
         return;
     }
+
+    GVNotification *notification = [self.arrNotifications objectAtIndex:indexPath.row];
+    [self.arrNotifications removeObjectAtIndex:indexPath.row];
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    [self.arrNotifications removeObjectAtIndex:index];
+    [self.tblNotifications beginUpdates];
     [self.tblNotifications deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    [self.tblNotifications reloadData];
+    [self.tblNotifications endUpdates];
+//    [self.tblNotifications reloadData];
     
-    GVNotification *notification = [self.arrNotifications objectAtIndex:index];
     [[GVService shared] removeUserNotificationById:notification.notificationId withCompletion:^(BOOL success, id res) {
         
         if (success) {
@@ -153,6 +175,12 @@
             }
         }
     }];
+}
+
+#pragma mark - Actions
+
+- (void)didClickBack {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
@@ -197,9 +225,11 @@
     }
     // Present Notification Alert Controller
     GVNotification *notification = [self.arrNotifications objectAtIndex:indexPath.row];
-//    NotificationAlertController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"NotificationAlertController"];
-//    [vc setNotification:notification];
-//    [self presentViewController:vc animated:YES completion:nil];
+    GVNotificationAlertController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"GVNotificationAlertController"];
+    [vc setNotification:notification];
+    [self presentViewController:vc animated:YES completion:^{
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_GROOPVIEW_ALERT_PRESENTED];
+    }];
     
     // Read Notification
     [self readNotification:notification];
@@ -211,8 +241,16 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self removeNotification:indexPath.row];
+        [self removeNotification:indexPath];
     }
 }
+
+//- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"Delete"  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath){
+//        //insert your deleteAction here
+//    }];
+//    deleteAction.backgroundColor = [UIColor redColor];
+//    return @[deleteAction];
+//}
 
 @end

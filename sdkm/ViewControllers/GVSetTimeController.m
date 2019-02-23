@@ -12,6 +12,12 @@
     
 }
 
+@property (weak, nonatomic) IBOutlet UISwitch *switchRightNow;
+@property (weak, nonatomic) IBOutlet UIImageView *imgCalendar;
+@property (weak, nonatomic) IBOutlet UILabel *lblDateTime;
+@property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
+@property (weak, nonatomic) IBOutlet UIButton *btnInvite;
+
 @end
 
 @implementation GVSetTimeController
@@ -33,15 +39,19 @@
     
     [self.switchRightNow setOn:YES];
     [self.datePicker setHidden:YES];
+    [self.datePicker setMinimumDate:[NSDate date]];
     [self.datePicker addTarget:self action:@selector(didChangeDate:) forControlEvents:UIControlEventValueChanged];
     
-    [self.btnInvite.layer setCornerRadius:5];
+//    [self.btnInvite.layer setCornerRadius:5];
+//    [self.btnInvite setBackgroundColor:[GVShared shared].themeColor];
+    
+    [self.switchRightNow setOnTintColor:[GVShared shared].themeColor];
 }
 
 - (void)didChangeDate:(id)sender {
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MMM-dd-yyyy HH:mm"];
+    [formatter setDateFormat:@"MMM-dd-yyyy hh:mm a"];
     NSString *dateTime = [formatter stringFromDate:self.datePicker.date];
     [self.lblDateTime setText:dateTime];
 }
@@ -143,6 +153,9 @@
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             if (success) {
                 if (res[@"groopview_id"]) {
+                    
+                    // Init CreateGroopview Info
+                    [GVShared shared].createGroopviewInfo = [NSMutableDictionary dictionary];
                     
                     [GVGlobal showAlertWithTitle:GROOPVIEW
                                          message:@"Your groopview was successfully created!"

@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self.viewContent.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [self.viewContent.layer setBorderColor:[GVShared shared].themeColor.CGColor];
     [self.viewContent.layer setBorderWidth:1];
     [self.viewContent.layer setCornerRadius:self.viewContent.frame.size.height / 2];
     

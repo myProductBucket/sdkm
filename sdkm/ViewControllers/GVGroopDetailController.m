@@ -62,13 +62,14 @@
     }
     [self.navigationItem setTitle:groopTitle];
     
+//    [self.btnContinue.layer setCornerRadius:5];
+//    [self.btnContinue setBackgroundColor:[GVShared shared].themeColor];
+    
     //    if (IPHONE) {
     [self.constraintCenterViewWidth setConstant:GV_SCREEN_WIDTH * 280 / 375];
     //    } else {
     //        [self.cnstrntCenterViewWidth setConstant:SCREEN_HEIGHT * 280 / 667];
     //    }
-    
-    [self.btnContinue.layer setCornerRadius:5];
     
     // Groop Admin Info
     [self.lblAdminAvatar.layer setMasksToBounds:YES];
@@ -93,7 +94,7 @@
 - (void)refreshGroopLayout {
     for (NSInteger i = 0; i < 3; i++) {
         GVCircleImageView *imgAvatar = self.imgParticipantAvatars[i];
-        [imgAvatar setImage:[UIImage imageNamed:@"AddContactGray" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
+        [imgAvatar setImage:[UIImage imageNamed:@"AddContactRed" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
         
         UILabel *lblAvatar = self.lblParticipantAvatars[i];
         [lblAvatar.layer setMasksToBounds:YES];
@@ -161,6 +162,13 @@
         }];
     }
     else { // Delete Groopview
+        
+        NSString *myPhone = [GVGlobal shared].mUser.phoneNumber;
+        if (![myPhone isEqualToString:self.groop.adminPhone]) {
+            [GVGlobal showAlertWithTitle:GROOPVIEW message:@"You have no permission to delete this groopview." fromView:self withCompletion:nil];
+            return;
+        }
+        
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [[GVService shared] removeGroopviewWithId:self.groop.groopId withCompletion:^(BOOL success, id res) {
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -189,7 +197,12 @@
 #pragma mark - Actions
 
 - (IBAction)didClickDeleteGroop:(id)sender {
-    [GVGlobal showAlertWithTitle:GROOPVIEW message:@"Are you sure you want to delete this groop?" yesButtonTitle:@"Yes" noButtonTitle:@"No" fromView:self yesCompletion:^(UIAlertAction *action) {
+    NSString *keyword;
+    if (self.viewType == GROOP_DETAIL_FROM_MY_GROOPS)
+        keyword = @"groop";
+    else
+        keyword = @"groopview";
+    [GVGlobal showAlertWithTitle:GROOPVIEW message:[NSString stringWithFormat:@"Are you sure you want to delete this %@?", keyword] yesButtonTitle:@"Yes" noButtonTitle:@"No" fromView:self yesCompletion:^(UIAlertAction *action) {
         [self deleteGroop];
     }];
 }
@@ -325,6 +338,7 @@
 
 - (IBAction)didClickContinue:(id)sender {
     if (self.viewType == GROOP_DETAIL_FROM_UPCOMING_GROOPVIEWS) { // from UpcomingGroopviews
+//        [GVGlobal presentGroopview:self.groop.groopId];
         GVGroopviewController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVGroopviewController"];
         [vc setGroopviewId:self.groop.groopId];
         [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];

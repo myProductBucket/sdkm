@@ -8,12 +8,14 @@
 
 #import "GVGroopviewController.h"
 #import "GVGroop.h"
+#import "ReactionsView.h"
 #import "GVContactCell.h"
 #import <TwilioVideo/TwilioVideo.h>
 #import <Contacts/Contacts.h>
 #import <AVKit/AVKit.h>
+@import Firebase;
 
-#define SEMI_WID 50.0f
+//#define SEMI_WID 50.0f
 #define MENU_BOTTOM 12.0f
 
 #define FIRST @"first"
@@ -22,10 +24,13 @@
 
 #define LOCAL_VIDEO_TRACK_NAME  @"local_video_track"
 
-@interface GVGroopviewController () <TVICameraCapturerDelegate, TVIRoomDelegate, TVIRemoteParticipantDelegate, UITableViewDelegate, UITableViewDataSource> {
+@interface GVGroopviewController () <TVICameraCapturerDelegate, TVIRoomDelegate, TVIRemoteParticipantDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
     CGFloat firstX;
     CGFloat firstY;
+    CGFloat chatWindowWid;
 }
+
+@property (weak, nonatomic) IBOutlet ReactionsView *viewContent;
 
 @property (weak, nonatomic) IBOutlet UIView *viewVideo;
 @property (weak, nonatomic) IBOutlet TVIVideoView *viewParticipant3;
@@ -43,23 +48,50 @@
 @property (weak, nonatomic) IBOutlet UIView *viewMenuPause;
 @property (weak, nonatomic) IBOutlet UIView *viewMenuStop;
 @property (weak, nonatomic) IBOutlet UIView *viewMenuAdd;
+@property (weak, nonatomic) IBOutlet UIView *viewMenuSendMessage;
+@property (weak, nonatomic) IBOutlet UIView *viewMenuSendReaction;
 
 // Contacts
 @property (weak, nonatomic) IBOutlet UIView *viewContactsCover;
 @property (weak, nonatomic) IBOutlet UIView *viewContacts;
 @property (weak, nonatomic) IBOutlet UITableView *tblContacts;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segContacts;
+@property (weak, nonatomic) IBOutlet UIView *viewSegment;
+
+// Chat
+@property (weak, nonatomic) IBOutlet UIView *viewChat;
+@property (weak, nonatomic) IBOutlet UITextField *txtMessage;
+@property (weak, nonatomic) IBOutlet UIView *viewMessage;
+@property (weak, nonatomic) IBOutlet UILabel *lblMsgSenderName;
+@property (weak, nonatomic) IBOutlet UILabel *lblMsgText;
+@property (weak, nonatomic) IBOutlet UIView *viewReactions;
 
 #pragma mark - Constraints
 
-/// Default - 195
+/// Default - 270
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintMuteViewBottom;
-/// Default - 148
+/// Default - 227
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintAddViewBottom;
-/// Default - 101
+/// Default - 184
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintPauseViewBottom;
-/// Default - 54
+/// Default - 141
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintStopViewBottom;
+/// Default - 98
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintSendMessageBottom;
+/// Default - 55
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintSendReactionBottom;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintMuteAudioTrailing;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintAddParticipantTrailing;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintPauseTrailing;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintStopTrailing;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintMenuTrailing;
+
+/// 12
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintChatViewBottom;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintChatViewWidth;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintMessageViewTop;
 
 @property (strong, nonatomic) GVGroop *curGroopview;
 @property Boolean isAdmin;
@@ -79,6 +111,19 @@
 @property (nonatomic, strong) NSMutableArray *arrAllContacts;
 @property (nonatomic, strong) NSMutableArray *arrGroopviewContacts;
 
+// Play Video
+@property (nonatomic, strong) AVPlayerViewController *playerVC;
+@property (nonatomic, strong) id playbackTimeObserver;
+
+// Firebase Database
+@property (nonatomic, strong) FIRDatabaseReference *firRef;
+@property (nonatomic, strong) FIRDatabaseReference *messagesRef;
+
+// Chat Text Emoji
+@property (strong, nonatomic) NSTimer *chatAppearanceTimer;
+/// Indicate how long the chat view is visible for without editing
+@property NSInteger chatAppearances;
+
 @end
 
 @implementation GVGroopviewController
@@ -87,10 +132,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.firRef = [[FIRDatabase database] reference];
+    self.messagesRef = [[[self.firRef child:[GVShared shared].clientId] child:FIR_MESSAGES_KEY] child:[NSString stringWithFormat:@"%@", self.groopviewId]];
+    
     [self initLayout];
     
     // Start Preview
     [self hideContactsView];
+    
+    // --
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_GROOPVIEW_STARTED];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -98,6 +149,9 @@
     
     // Get Groopview Detail
     [self getGroopviewDetail];
+    
+    // Listen new Text / Emoji for Chat
+    [self listenChatTextEmoji];
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
@@ -108,11 +162,27 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    if (self.room != nil) {
+        [self.room disconnect];
+    }
+    
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
 //    [[GVShared shared] setLockOrientation:UIInterfaceOrientationMaskAll];
     [GVShared lockScreen:UIInterfaceOrientationMaskPortrait andRotateTo:UIInterfaceOrientationPortrait];
+    
+    if (self.playerVC) {
+        [self.playerVC.player removeTimeObserver:self.playbackTimeObserver];
+        [self.playerVC.player replaceCurrentItemWithPlayerItem:nil];
+        self.playerVC.player = nil;
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_GROOPVIEW_STARTED];
 }
 
 /*
@@ -128,6 +198,21 @@
 #pragma mark - My Methods
 
 - (void)initLayout {
+    
+    // --
+    [self layoutMenuButtons];
+    
+    if (GV_IPHONE) {
+        chatWindowWid = GV_SCREEN_WIDTH * 70 / 320.0f;
+    }
+    else
+        chatWindowWid = 140;
+    
+    [self.viewParticipant1 setFrame:CGRectMake(16, 16, chatWindowWid, chatWindowWid)];
+    [self.viewParticipant2 setFrame:CGRectMake(16, 16 + chatWindowWid + 4, chatWindowWid, chatWindowWid)];
+    [self.viewParticipant3 setFrame:CGRectMake(16, 16 + (chatWindowWid + 4) * 2.0f, chatWindowWid, chatWindowWid)];
+    [self.viewHost setFrame:CGRectMake(16, 16 + (chatWindowWid + 4) * 3.0f, chatWindowWid, chatWindowWid)];
+    
     // -- Participant View Layout
     [self.viewHost.layer setCornerRadius:self.viewHost.frame.size.height / 2];
     [self.viewParticipant1.layer setCornerRadius:self.viewParticipant1.frame.size.height / 2];
@@ -137,14 +222,14 @@
     [self.viewHost.layer setBorderWidth:1];
     [self.viewHost.layer setBorderColor:[GVShared shared].themeColor.CGColor];
     [self.viewParticipant1.layer setBorderWidth:1];
-    [self.viewParticipant1.layer setBorderColor:[GVShared shared].themeColor.CGColor];
     [self.viewParticipant2.layer setBorderWidth:1];
-    [self.viewParticipant2.layer setBorderColor:[GVShared shared].themeColor.CGColor];
     [self.viewParticipant3.layer setBorderWidth:1];
-    [self.viewParticipant3.layer setBorderColor:[GVShared shared].themeColor.CGColor];
+    
     [self.viewParticipant1 setHidden:YES];
     [self.viewParticipant2 setHidden:YES];
     [self.viewParticipant3 setHidden:YES];
+    
+    [self initParticipantBorders];
     
     self.participantsDic = [NSMutableDictionary dictionary];
     self.videoViewsDic = [NSMutableDictionary dictionary];
@@ -179,16 +264,22 @@
     [self.viewMenuPause.layer setCornerRadius:wid];
     [self.viewMenuStop.layer setCornerRadius:wid];
     [self.viewMenuAdd.layer setCornerRadius:wid];
+    [self.viewMenuSendMessage.layer setCornerRadius:wid];
+    [self.viewMenuSendReaction.layer setCornerRadius:wid];
     
     [self.constraintMuteViewBottom setConstant:MENU_BOTTOM];
     [self.constraintPauseViewBottom setConstant:MENU_BOTTOM];
     [self.constraintStopViewBottom setConstant:MENU_BOTTOM];
     [self.constraintAddViewBottom setConstant:MENU_BOTTOM];
+    [self.constraintSendMessageBottom setConstant:MENU_BOTTOM];
+    [self.constraintSendReactionBottom setConstant:MENU_BOTTOM];
     
     [self.viewMenuStop setHidden:YES];
     [self.viewMenuPause setHidden:YES];
     [self.viewMenuMute setHidden:YES];
     [self.viewMenuAdd setHidden:YES];
+    [self.viewMenuSendMessage setHidden:YES];
+    [self.viewMenuSendReaction setHidden:YES];
     
     // Contact Management
     [self.tblContacts setDelegate:self];
@@ -197,6 +288,94 @@
     UIRefreshControl *refreshC = [[UIRefreshControl alloc] init];
     [refreshC addTarget:self action:@selector(refreshContacts:) forControlEvents:UIControlEventValueChanged];
     [self.tblContacts addSubview:refreshC];
+    
+    [self.viewSegment setBackgroundColor:[GVShared shared].themeColor];
+    
+    // Chat
+    [self.viewChat.layer setCornerRadius:self.viewChat.frame.size.height / 2];
+    [self.viewChat.layer setBorderWidth:1.0f];
+    [self.viewChat.layer setBorderColor:[UIColor colorWithRed:26.0 / 255.0 green:56.0 / 255.0 blue:67.0 / 255.0 alpha:1].CGColor];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureOnChatView:)];
+    [self.viewChat addGestureRecognizer:panGesture];
+    
+    [self.txtMessage setKeyboardAppearance:UIKeyboardAppearanceDark];
+    [self.txtMessage setAttributedPlaceholder:[[NSAttributedString alloc] initWithString:@"Type here..." attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:143.0 / 255.0 green:153.0 / 255.0 blue:160.0 / 255.0 alpha:1]}]];
+    [self.txtMessage setDelegate:self];
+    [self.txtMessage addTarget:self action:@selector(didChangeMessage:) forControlEvents:UIControlEventEditingChanged];
+    [self.txtMessage setAutocorrectionType:UITextAutocorrectionTypeNo];
+    
+    [self.constraintChatViewWidth setConstant:GV_SCREEN_HEIGHT * 2 / 3];
+    [self.constraintChatViewBottom setConstant:-60];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        
+        NSValue *value = [note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey];
+        CGRect rect = value.CGRectValue;
+        
+        [self moveChatView:MENU_BOTTOM + rect.size.height];
+        
+        [self.chatAppearanceTimer invalidate];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        
+        [self moveChatView:MENU_BOTTOM];
+        
+        [self startTimerForChatAppearance];
+    }];
+    
+    [self.viewReactions setHidden:YES];
+    [self.viewReactions.layer setCornerRadius:self.viewReactions.frame.size.height / 2];
+    
+    [self.viewMessage setHidden:YES];
+    [self.viewMessage.layer setCornerRadius:5.0f];
+    [self.lblMsgSenderName setText:@""];
+    [self.lblMsgText setText:@""];
+}
+
+- (void)layoutMenuButtons {
+    BOOL isPhoneX = NO;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                break;
+            case 1920:
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                break;
+            case 2436:
+                printf("iPhone X, Xs");
+            case 2688:
+                printf("iPhone Xs Max");
+            case 1792:
+                printf("iPhone Xr");
+                isPhoneX = YES;
+                break;
+            default:
+                printf("unknown");
+        }
+    }
+    CGFloat trailing = 12;
+    if (isPhoneX) {
+        trailing = 32;
+    }
+    [self.constraintMuteAudioTrailing setConstant:trailing];
+    [self.constraintAddParticipantTrailing setConstant:trailing];
+    [self.constraintPauseTrailing setConstant:trailing];
+    [self.constraintStopTrailing setConstant:trailing];
+    [self.constraintMenuTrailing setConstant:trailing];
+}
+
+- (void)initParticipantBorders {
+    [self.viewHost.layer setBorderColor:[UIColor darkGrayColor].CGColor];
+    [self.viewParticipant1.layer setBorderColor:[UIColor darkGrayColor].CGColor];
+    [self.viewParticipant2.layer setBorderColor:[UIColor darkGrayColor].CGColor];
+    [self.viewParticipant3.layer setBorderColor:[UIColor darkGrayColor].CGColor];
 }
 
 - (void)refreshContacts:(UIRefreshControl *)sender {
@@ -226,16 +405,17 @@
         CGFloat finalX = translatedPoint.x + velocityX;
         CGFloat finalY = translatedPoint.y + velocityY;// translatedPoint.y + (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.view].y);
         
-        if (finalX < SEMI_WID) {
-            finalX = SEMI_WID;
-        } else if (finalX > self.view.frame.size.width - SEMI_WID) {
-            finalX = self.view.frame.size.width - SEMI_WID;
+        CGFloat semiWid = chatWindowWid / 2.0f;
+        if (finalX < semiWid) {
+            finalX = semiWid;
+        } else if (finalX > self.view.frame.size.width - semiWid) {
+            finalX = self.view.frame.size.width - semiWid;
         }
         
-        if (finalY < SEMI_WID) { // to avoid status bar
-            finalY = SEMI_WID;
-        } else if (finalY > self.view.frame.size.height - SEMI_WID) {
-            finalY = self.view.frame.size.height - SEMI_WID;
+        if (finalY < semiWid) { // to avoid status bar
+            finalY = semiWid;
+        } else if (finalY > self.view.frame.size.height - semiWid) {
+            finalY = self.view.frame.size.height - semiWid;
         }
         
         CGFloat animationDuration = (ABS(velocityX) * .0002) + .2;
@@ -261,11 +441,15 @@
     [self.viewMenuPause setHidden:NO];
     [self.viewMenuMute setHidden:NO];
     [self.viewMenuAdd setHidden:NO];
+    [self.viewMenuSendMessage setHidden:NO];
+    [self.viewMenuSendReaction setHidden:NO];
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        [self.constraintMuteViewBottom setConstant:195];
-        [self.constraintAddViewBottom setConstant:148];
-        [self.constraintPauseViewBottom setConstant:101];
-        [self.constraintStopViewBottom setConstant:54];
+        [self.constraintMuteViewBottom setConstant:270];
+        [self.constraintAddViewBottom setConstant:227];
+        [self.constraintPauseViewBottom setConstant:184];
+        [self.constraintStopViewBottom setConstant:141];
+        [self.constraintSendMessageBottom setConstant:98];
+        [self.constraintSendReactionBottom setConstant:55];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
     }];
@@ -277,12 +461,16 @@
         [self.constraintPauseViewBottom setConstant:MENU_BOTTOM];
         [self.constraintMuteViewBottom setConstant:MENU_BOTTOM];
         [self.constraintAddViewBottom setConstant:MENU_BOTTOM];
+        [self.constraintSendMessageBottom setConstant:MENU_BOTTOM];
+        [self.constraintSendReactionBottom setConstant:MENU_BOTTOM];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
         [self.viewMenuStop setHidden:YES];
         [self.viewMenuPause setHidden:YES];
         [self.viewMenuMute setHidden:YES];
         [self.viewMenuAdd setHidden:YES];
+        [self.viewMenuSendMessage setHidden:YES];
+        [self.viewMenuSendReaction setHidden:YES];
     }];
 }
 
@@ -299,15 +487,14 @@
                 NSString *myPhone = [GVGlobal shared].mUser.phoneNumber;
                 if ([adminPhone isEqualToString:myPhone]) {
                     self.isAdmin = YES;
+                    [self.viewHost.layer setBorderColor:[GVShared shared].themeColor.CGColor];
                 }
                 else {
                     self.isAdmin = NO;
                 }
-                
-//                [self listenRoomInfo];
-                
+                // Get Twilio Access Token from Groopview Server
                 [self getTwilioAccessToken];
-                
+                // Play Video on Main Video View
                 [self playVideo];
                 
             }
@@ -349,11 +536,13 @@
                     [self prepareLocalMedia];
                     // Connect to Room
                     [self connectToRoom];
+                    // Listen Room info from Firebase
+                    [self listenRoomInfo];
                 }
             }
             else {
                 [GVGlobal showAlertWithTitle:GROOPVIEW
-                                     message:@"Failed to get the token.\nWould you retry now?"
+                                     message:@"Something went wrong.\nWould you retry now?"
                               yesButtonTitle:@"Yes" noButtonTitle:@"Later"
                                     fromView:self
                                yesCompletion:^(UIAlertAction *action) {
@@ -394,6 +583,194 @@
     return nil;
 }
 
+#pragma mark - Text / Emoji Chat
+
+- (void)panGestureOnChatView:(UIPanGestureRecognizer *)gestureRecognizer {
+    CGPoint vel = [gestureRecognizer velocityInView:self.viewChat];
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        if (vel.y > 0) { // to bottom
+            if (self.constraintChatViewBottom.constant == MENU_BOTTOM) {
+                [self hideChatView];
+            }
+            else {
+                [self.view endEditing:YES];
+            }
+        }
+    }
+}
+
+- (void)didChangeMessage:(id)sender {
+    self.chatAppearances = 0;
+}
+
+- (void)hideChatView {
+    [self moveChatView:-60];
+    
+    if (self.chatAppearanceTimer) {
+        [self.chatAppearanceTimer invalidate];
+    }
+    [self.txtMessage setText:@""];
+}
+
+- (void)showChatView {
+    [self moveChatView:MENU_BOTTOM];
+    
+    [self startTimerForChatAppearance];
+}
+
+- (void)startTimerForChatAppearance {
+    self.chatAppearances = 0;
+    self.chatAppearanceTimer = [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        self.chatAppearances++;
+        if (self.chatAppearances > 5) {
+            [self.chatAppearanceTimer invalidate];
+            if (self.constraintChatViewBottom.constant == MENU_BOTTOM) {
+                [self hideChatView];
+            }
+        }
+    }];
+}
+
+- (void)moveChatView:(CGFloat)value {
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self.constraintChatViewBottom setConstant:value];
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)sendMessageBySenderId:(NSString *)senderId
+                   senderName:(NSString *)senderName
+                      message:(NSString *)message
+                      isEmoji:(BOOL)isEmoji {
+    
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [dictionary setObject:senderId forKey:FIR_SENDER_ID];
+    [dictionary setObject:senderName forKey:FIR_SENDER_NAME];
+    [dictionary setObject:message forKey:FIR_SENDER_MESSAGE];
+    [dictionary setObject:isEmoji? @"1": @"0" forKey:FIR_IS_EMOJI];
+    
+    [[self.messagesRef childByAutoId] setValue:dictionary withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+        
+    }];
+}
+
+- (void)showReactions {
+    [self.viewReactions setHidden:NO];
+    [self.viewReactions setTransform:CGAffineTransformMakeScale(0.01, 0.01)];
+    [UIView animateWithDuration:0.3 delay:0.0 usingSpringWithDamping:0.6 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self.viewReactions setTransform:CGAffineTransformIdentity];
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        [self.viewReactions setUserInteractionEnabled:YES];
+    }];
+}
+
+- (void)hideReactions {
+    [UIView animateWithDuration:0.3 delay:0.0 usingSpringWithDamping:0.6 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self.viewReactions setTransform:CGAffineTransformMakeScale(0.00, 0.00)];
+        [self.view layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        [self.viewReactions setUserInteractionEnabled:NO];
+        [self.viewReactions setHidden:YES];
+    }];
+}
+
+- (void)showViewMessage:(NSString *)message
+                 sender:(NSString *)senderName {
+    
+    [self.viewMessage.layer removeAllAnimations];
+    
+    [self.lblMsgSenderName setText:senderName];
+    [self.lblMsgText setText:message];
+    [self.viewMessage setAlpha:1];
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        [self.constraintMessageViewTop setConstant:GV_SCREEN_WIDTH / 2];
+        [self.viewMessage layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        [self.viewMessage setHidden:NO];
+        [UIView animateWithDuration:5 animations:^{
+            [self.viewMessage setAlpha:0];
+            [self.constraintMessageViewTop setConstant:0];
+            [self.view layoutIfNeeded];
+        } completion:^(BOOL finished) {
+            [self.viewMessage setHidden:YES];
+        }];
+    }];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSInteger maxLength = 30;
+    NSString *curString = textField.text;
+    NSString *newString = [curString stringByReplacingCharactersInRange:range withString:string];
+    return newString.length <= maxLength;
+}
+
+#pragma mark - Interact with Firebase
+
+- (void)listenRoomInfo {
+    if (!self.isAdmin
+        && self.roomName) {
+        [[[[self.firRef child:[GVShared shared].clientId] child:FIR_GROOPVIEWS] child:self.roomName] observeEventType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+            if (snapshot.value
+                && ![snapshot.value isEqual:[NSNull null]]
+                && [snapshot.value isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *roomInfo = snapshot.value;
+                
+                // Video State: Play/Pause
+                NSString *videoStatus = [roomInfo objectForKey:FIR_VIDEO_STATE];
+                if ([videoStatus integerValue] == 0) {
+                    [self.playerVC.player pause];
+                }
+                else if ([videoStatus integerValue] == 1) {
+                    [self.playerVC.player play];
+                }
+                
+                // Seek to Time
+                NSString *playbackTime = [roomInfo objectForKey:FIR_PLAYBACK_TIME];
+                if (labs([playbackTime integerValue] / 1000 - (long)CMTimeGetSeconds(self.playerVC.player.currentItem.currentTime)) > 5) {
+                    [self.playerVC.player.currentItem seekToTime:CMTimeMakeWithSeconds([playbackTime doubleValue] / 1000, 60000) completionHandler:^(BOOL finished) {
+                        
+                    }];
+                }
+            }
+        }];
+    }
+}
+
+- (void)listenChatTextEmoji {
+    
+    [self.messagesRef observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+        
+        if ([snapshot exists]) {
+            NSDictionary *dic = snapshot.value;
+//            NSString *senderId = [dic objectForKey:FIR_SENDER_ID];
+            NSString *senderName = [dic objectForKey:FIR_SENDER_NAME];
+            NSString *message = [dic objectForKey:FIR_SENDER_MESSAGE];
+            BOOL isEmoji = (![GVGlobal isNull:[dic objectForKey:FIR_IS_EMOJI]] && [[dic objectForKey:FIR_IS_EMOJI] isEqualToString:@"1"])? YES: NO;
+            
+            if (isEmoji) {
+                [self.viewContent showReaction:[UIImage imageNamed:message inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
+            }
+            else {
+                [self showViewMessage:message
+                               sender:senderName];
+            }
+        }
+        
+    } withCancelBlock:^(NSError * _Nonnull error) {
+        NSLog(@"Firebase: %@", error.localizedDescription);
+    }];
+}
+
 #pragma mark - Video Management
 
 - (void)playVideo {
@@ -413,20 +790,55 @@
     
     AVPlayerItem *item = [AVPlayerItem playerItemWithURL:[NSURL URLWithString:defaultVideoURL]];
     AVPlayer *player = [AVPlayer playerWithPlayerItem:item];
+//    [player setMuted:YES];
     
-//    CALayer *superLayer = self.viewVideo.layer;
-//    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-//    [playerLayer setFrame:self.viewVideo.bounds];
-//    playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-//    [superLayer addSublayer:playerLayer];
+    self.playerVC = [[AVPlayerViewController alloc] init];
+    [self.playerVC setPlayer:player];
+    [self addChildViewController:self.playerVC];
+    [self.viewVideo addSubview:self.playerVC.view];
+    [self.playerVC.view setFrame:self.viewVideo.bounds];
     
-    AVPlayerViewController *playerVC = [[AVPlayerViewController alloc] init];
-    [playerVC setPlayer:player];
-    [self addChildViewController:playerVC];
-    [self.viewVideo addSubview:playerVC.view];
-    [playerVC.view setFrame:self.viewVideo.bounds];
+    if (self.isAdmin) {
+        [self.playerVC setShowsPlaybackControls:YES];
+    }
+    else {
+        [self.playerVC setShowsPlaybackControls:NO];
+    }
     
-    [playerVC.player play];
+    [self.playerVC.player play];
+//    [self.playerVC.player setMuted:YES];
+    
+    // Capturing the Playback Time
+    __weak typeof(self) weakSelf = self;
+    CMTime interval = CMTimeMakeWithSeconds(1.0, NSEC_PER_SEC); // 1 second
+    self.playbackTimeObserver = [self.playerVC.player addPeriodicTimeObserverForInterval:interval queue:nil usingBlock:^(CMTime time) {
+        
+//        NSLog(@"Play Video: %lld", time.value);
+        if (self.isAdmin
+            && self.roomName) {
+            
+            NSString *videoStatus = @"0";
+            if (weakSelf.playerVC.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
+                NSLog(@"Play Video: Paused...");
+                videoStatus = @"0"; // Paused
+            }
+            else if (weakSelf.playerVC.player.timeControlStatus == AVPlayerTimeControlStatusPlaying) {
+                NSLog(@"Play Video: Playing...");
+                videoStatus = @"1"; // Playing
+            }
+            else
+                NSLog(@"Waiting to Play with Specific Rate...");
+            
+            NSMutableDictionary *playbackInfo = [NSMutableDictionary dictionary];
+            [playbackInfo setObject:[NSString stringWithFormat:@"%f", 1000 * CMTimeGetSeconds(time)] forKey:FIR_PLAYBACK_TIME];
+            [playbackInfo setObject:weakSelf.groopviewId forKey:FIR_GROOPVIEW_ID];
+            [playbackInfo setObject:videoStatus forKey:FIR_VIDEO_STATE];
+
+            [[[[weakSelf.firRef child:[GVShared shared].clientId] child:FIR_GROOPVIEWS] child:weakSelf.roomName] updateChildValues:playbackInfo withCompletionBlock:^(NSError * _Nullable error, FIRDatabaseReference * _Nonnull ref) {
+
+            }];
+        }
+    }];
 }
 
 #pragma mark - Contact Management
@@ -458,12 +870,12 @@
             CNContactStore *contactStore = [[CNContactStore alloc] init];
             [contactStore requestAccessForEntityType:entityType completionHandler:^(BOOL granted, NSError * _Nullable error) {
                 if(granted){
-                    [self readContacts];
+                    [self readContactsForOrder];
                 }
             }];
         }
         else if ([CNContactStore authorizationStatusForEntityType:entityType] ==  CNAuthorizationStatusAuthorized) {
-            [self readContacts];
+            [self readContactsForOrder];
         }
     }
 }
@@ -486,18 +898,26 @@
     }
     
     [self getUsers:contacts];
+}
+
+- (void)readContactsForOrder {
+    NSMutableArray *contacts = [NSMutableArray new];
+    NSArray *keysToFetch = @[CNContactEmailAddressesKey, CNContactPhoneNumbersKey, CNContactFamilyNameKey, CNContactGivenNameKey, CNContactPostalAddressesKey];
+    CNContactStore *contactStore = [[CNContactStore alloc] init];
+    CNContactFetchRequest *fetchRequest = [[CNContactFetchRequest alloc] initWithKeysToFetch:keysToFetch];
+    [fetchRequest setSortOrder:CNContactSortOrderGivenName];
     
-    //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    //    [contactStore enumerateContactsWithFetchRequest:request error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
-    //
-    //        if (!*stop) {
-    //            [contacts addObject:contact];
-    //        }
-    //        else { // at the end
-    //            [MBProgressHUD hideHUDForView:self.view animated:YES];
-    //            [self getUsers:contacts];
-    //        }
-    //    }];
+    NSError *error;
+    [contactStore enumerateContactsWithFetchRequest:fetchRequest error:&error usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
+        if (*stop == NO
+            && contact)
+            [contacts addObject:contact];
+    }];
+    
+    if (error)
+        [GVGlobal showAlertWithTitle:GROOPVIEW message:error.localizedDescription fromView:self withCompletion:nil];
+    else
+        [self getUsers:contacts];
 }
 
 - (void)getUsers:(NSMutableArray *)contacts {
@@ -568,10 +988,14 @@
     
     self.arrGroopviewContacts = [NSMutableArray array];
     // --
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    });
     [[GVService shared] checkPhonenumbersExist:[NSMutableArray arrayWithArray:phoneNumbers.allKeys] withCompletion:^(BOOL success, id res) {
         
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
         if (success) {
             if (res[@"phone_numbers"]) {
                 for (GVUser *user in self.arrAllContacts) {
@@ -631,11 +1055,11 @@
         
         if (user.isAdded) {
             [cell.btnInvite setHidden:YES];
-            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"AddContactRed"] forState:UIControlStateNormal];
+            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"AddContactRed" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
         }
         else {
             [cell.btnInvite setHidden:NO];
-            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"AddContactGray"] forState:UIControlStateNormal];
+            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"AddContactGray" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
         }
         
         [cell.btnAdd setTag:indexPath.row];
@@ -660,7 +1084,7 @@
                                                  builder.minFrameRate = TVIVideoConstraintsFrameRateNone;
                                              }];
     
-    self.localVideoTrack = [TVILocalVideoTrack trackWithCapturer:self.camera enabled:YES constraints:videoConstraints name:LOCAL_VIDEO_TRACK_NAME];
+    self.localVideoTrack = [TVILocalVideoTrack trackWithCapturer:self.camera enabled:YES constraints:videoConstraints name:[NSString stringWithFormat:@"%@", [GVGlobal shared].mUser.phoneNumber]];
     if (!self.localVideoTrack) {
     } else {
         [self.viewHost setMirror:YES];
@@ -699,11 +1123,13 @@
 
 - (IBAction)didClickMenu:(id)sender {
     [self.btnMenu setSelected:!self.btnMenu.isSelected];
-    if (self.btnMenu.isSelected) {
+    if (self.btnMenu.isSelected) { // Expand Menu
         [self showMenu];
+        [self hideChatView];
     }
-    else {
+    else { // Collapse Menu
         [self hideMenu];
+        [self hideReactions];
     }
 }
 
@@ -736,6 +1162,7 @@
                     [self.localParticipant unpublishVideoTrack:self.localVideoTrack];
                 }
             }
+            [self.viewHost setHidden:YES];
         }
         else { // Resume
             [self.lblPauseSharing setText:@"Pause Sharing"];
@@ -751,6 +1178,7 @@
             if (!isExisted) {
                 [self.localParticipant publishVideoTrack:self.localVideoTrack];
             }
+            [self.viewHost setHidden:NO];
         }
     }
 }
@@ -795,6 +1223,141 @@
     }
     
     //
+    if (self.curGroopview.numberOfParticipants > 3) {
+        [GVGlobal showAlertWithTitle:GROOPVIEW message:@"This groopview is full and you can not add more." fromView:self withCompletion:nil];
+        return;
+    }
+    
+    Boolean isAdded = NO;
+    NSString *first = GV_NULL, *firstCode = GV_NULL, *second = GV_NULL, *secondCode = GV_NULL, *third = GV_NULL, *thirdCode = GV_NULL;
+    if (self.curGroopview.members.count > 0) {
+        GVParticipant *participant = [self.curGroopview.members objectAtIndex:0];
+        if (participant.phoneNumber.length > 0
+            && participant.countryCode.length > 0) {
+            first = participant.phoneNumber;
+            firstCode = participant.countryCode;
+        }
+    }
+    if ([first isEqualToString:GV_NULL]) {
+        first = user.phoneNumber;
+        firstCode = user.countryCode;
+        isAdded = YES;
+    }
+    NSString *friend1 = [GVGlobal getJsonForFriend:firstCode phoneNumber:first];
+    
+    if (self.curGroopview.members.count > 1) {
+        GVParticipant *participant = [self.curGroopview.members objectAtIndex:1];
+        if (participant.phoneNumber.length > 0
+            && participant.countryCode.length > 0) {
+            second = participant.phoneNumber;
+            secondCode = participant.countryCode;
+        }
+    }
+    if (!isAdded
+        && [second isEqualToString:GV_NULL]) {
+        second = user.phoneNumber;
+        secondCode = user.countryCode;
+        isAdded = YES;
+    }
+    NSString *friend2 = [GVGlobal getJsonForFriend:secondCode phoneNumber:second];
+    
+    if (self.curGroopview.members.count > 2) {
+        GVParticipant *participant = [self.curGroopview.members objectAtIndex:2];
+        if (participant.phoneNumber.length > 0
+            && participant.countryCode.length > 0) {
+            third = participant.phoneNumber;
+            thirdCode = participant.countryCode;
+        }
+    }
+    if (!isAdded
+        && [third isEqualToString:GV_NULL]) {
+        third = user.phoneNumber;
+        thirdCode = user.countryCode;
+        isAdded = YES;
+    }
+    NSString *friend3 = [GVGlobal getJsonForFriend:thirdCode phoneNumber:third];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[GVService shared] updateGroopviewWithId:self.groopviewId groopId:@"" videoURL:self.curGroopview.videoURL videoThumb:self.curGroopview.videoThumbnail isJoinNow:self.curGroopview.isRightNow joinTime:self.curGroopview.joinTime friend1:friend1 friend2:friend2 friend3:friend3 withCompletion:^(BOOL success, id res) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if (success) {
+            [user setIsAdded:YES];
+            [self.tblContacts reloadData];
+        }
+    }];
+    
+}
+
+- (IBAction)didClickSend:(id)sender {
+    // Send message to the Groop Participants
+    NSString *message = self.txtMessage.text;
+    if (message.length == 0) {
+        return;
+    }
+    
+    NSString *senderId = [GVGlobal shared].mUser.phoneNumber;
+    NSString *senderName = [GVGlobal shared].mUser.userName;
+    
+    [self sendMessageBySenderId:senderId
+                     senderName:senderName
+                        message:message
+                        isEmoji:NO];
+    
+    [self.txtMessage setText:@""];
+    [self.view endEditing:YES];
+}
+
+- (IBAction)didClickSendMessage:(UIButton *)sender {
+    [self showChatView];
+    [self didClickMenu:self.btnMenu];
+}
+
+- (IBAction)didClickSendReaction:(UIButton *)sender {
+    [sender setSelected:!sender.isSelected];
+    if (sender.isSelected) {
+        [self showReactions];
+    }
+    else {
+        [self hideReactions];
+    }
+}
+
+- (IBAction)didClickReactions:(UIButton *)sender {
+    
+    NSString *imageName = @"reaction_smile";
+    switch (sender.tag) {
+        case 0:
+            imageName = @"reaction_angry";
+            break;
+        case 1:
+            imageName = @"reaction_sad";
+            break;
+        case 2:
+            imageName = @"reaction_surprise";
+            break;
+        case 3:
+            imageName = @"reaction_smile";
+            break;
+        case 4:
+            imageName = @"reaction_laugh";
+            break;
+        case 5:
+            imageName = @"reaction_heart";
+            break;
+        case 6:
+            imageName = @"reaction_thumbup";
+            break;
+            
+        default:
+            break;
+    }
+    NSString *senderId = [GVGlobal shared].mUser.phoneNumber;
+    NSString *senderName = [GVGlobal shared].mUser.userName;
+    
+    [self sendMessageBySenderId:senderId
+                     senderName:senderName
+                        message:imageName
+                        isEmoji:YES];
 }
 
 #pragma mark - TVIRoomDelegate
@@ -863,20 +1426,27 @@
     
     NSString *participantKey = [self getFreeParticipantKey];
     if (participantKey) {
-        [self.participantsDic setObject:participant forKey:participantKey];
+        [self.participantsDic setObject:participant.identity forKey:participantKey];
         
         TVIVideoView *videoView = [self.videoViewsDic objectForKey:participantKey];
         [videoView setMirror:YES];
         [videoView setHidden:NO];
         [videoTrack addRenderer:videoView];
+        
+        NSString *trackName = videoTrack.name;
+        NSString *adminPhone = [NSString stringWithFormat:@"%@", self.curGroopview.adminPhone];
+        if ([trackName isEqualToString:adminPhone]) {
+            [self initParticipantBorders];
+            [videoView.layer setBorderColor:[GVShared shared].themeColor.CGColor];
+        }
     }
 }
 
 - (void)unsubscribedFromVideoTrack:(TVIRemoteVideoTrack *)videoTrack publication:(TVIRemoteVideoTrackPublication *)publication forParticipant:(TVIRemoteParticipant *)participant {
     
     for (NSString *key in self.participantsDic.allKeys) {
-        TVIRemoteParticipant *remoteParticipant = [self.participantsDic objectForKey:key];
-        if ([participant.identity isEqualToString:remoteParticipant.identity]) {
+        NSString *remoteIdentity = [self.participantsDic objectForKey:key];
+        if ([participant.identity isEqualToString:remoteIdentity]) {
             TVIVideoView *videoView = [self.videoViewsDic objectForKey:key];
             [videoView setHidden:YES];
             [videoTrack removeRenderer:videoView];

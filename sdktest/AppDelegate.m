@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import <sdkm/Groopview.h>
+#import <Groopview/Groopview.h>
 #import "ChooseVideoController.h"
 @import AirshipKit;
 @import Firebase;
@@ -47,7 +47,7 @@
     // Groopview SDK initialization
     [[GVShared shared] setClientId:@"2"];
     [[GVShared shared] setClientSecret:@"ngy7TJDuanGDqystCDHoW735sTdHRG8jz71deF1b"];
-    [[GVShared shared] setThemeColor:[UIColor colorWithRed:255.0 / 255.0 green:54.0 / 255.0 blue:50.0 / 255.0 alpha:1.0]];
+    [[GVShared shared] setThemeColor:[UIColor colorWithRed:0.0 / 255.0 green:179.0 / 255.0 blue:214.0 / 255.0 alpha:1.0]];//
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ChooseVideoController *vc = [storyboard instantiateViewControllerWithIdentifier:@"ChooseVideoController"];    
@@ -56,6 +56,8 @@
     
     // Firebase
     [FIRApp configure];
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
     return YES;
 }
@@ -116,11 +118,13 @@
 #pragma mark - PushNotificationDelegate
 
 - (void)receivedBackgroundNotification:(UANotificationContent *)notificationContent completionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [self manageRemoteNotification:notificationContent.notification.request.content.userInfo];
 }
 
 - (void)receivedForegroundNotification:(UANotificationContent *)notificationContent completionHandler:(void (^)(void))completionHandler {
-    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [self manageRemoteNotification:notificationContent.notification.request.content.userInfo];
 }
 
 - (void)receivedNotificationResponse:(UANotificationResponse *)notificationResponse completionHandler:(void (^)(void))completionHandler {
@@ -138,6 +142,55 @@
 - (void)registrationSucceededForChannelID:(NSString *)channelID deviceToken:(NSString *)deviceToken {
     NSLog(@"Channel ID: %@, Device Token: %@", channelID, deviceToken);
     [[NSUserDefaults standardUserDefaults] setObject:deviceToken forKey:PREF_UA_TOKEN];
+}
+
+#pragma mark - Manage the Notification from Groopview
+
+- (void)manageRemoteNotification:(NSDictionary *)userInfo {
+    UIApplicationState appState = [UIApplication sharedApplication].applicationState;
+    if (appState != UIApplicationStateInactive && appState != UIApplicationStateBackground) {
+    }
+    else {
+        //        [self presentViewController:userInfo];
+    }
+    
+    if (userInfo[@"notification_type"]) {
+        NSString *notiTypeString = userInfo[@"notification_type"];
+        NSString *groopviewId = userInfo[@"groopview_id"];
+        
+        // Exception
+        if (notiTypeString == nil
+            || groopviewId == nil) {
+            return;
+        }
+        
+        // Present Alert View Controller
+        GVNotificationType notiType = [GVNotification getNotificationTypeFrom:notiTypeString];
+        GVNotificationAlertController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVNotificationAlertController"];
+        GVNotification *notification = [[GVNotification alloc] init];
+        notification.notificationType = notiType;
+        notification.groopviewId = groopviewId;
+        if (userInfo[@"aps"]
+            && userInfo[@"aps"][@"alert"]) {
+            notification.notificationText = userInfo[@"aps"][@"alert"];
+        }
+        [vc setNotification:notification];
+        
+        UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+        if (window.rootViewController.presentedViewController == nil
+            && ![[NSUserDefaults standardUserDefaults] boolForKey:PREF_GROOPVIEW_STARTED]
+            && ![[NSUserDefaults standardUserDefaults] boolForKey:PREF_GROOPVIEW_ALERT_PRESENTED]) {
+            [window.rootViewController presentViewController:vc animated:YES completion:^{
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_GROOPVIEW_ALERT_PRESENTED];
+            }];
+        }
+        else {
+            if ([GVShared shared].arrAlerts == nil) {
+                [[GVShared shared] setArrAlerts:[NSMutableArray array]];
+            }
+            [[GVShared shared].arrAlerts addObject:vc];
+        }
+    }
 }
 
 @end

@@ -1,0 +1,6 @@
+framework module Groopview {
+  umbrella header "Groopview.h"
+
+  export *
+  module * { export * }
+}

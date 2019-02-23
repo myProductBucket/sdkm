@@ -36,6 +36,8 @@
 
 - (void)initData {
     self.themeColor = [UIColor appRed];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_GROOPVIEW_STARTED];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:PREF_GROOPVIEW_ALERT_PRESENTED];
 }
 
 #pragma mark -
@@ -90,6 +92,10 @@
 }
 
 + (void)presentGroopviewStart:(UIViewController *)from {
+    
+    // Init CreateGroopview Info
+    [GVShared shared].createGroopviewInfo = [NSMutableDictionary dictionary];
+    
     GVStartGroopviewController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVStartGroopviewController"];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];

@@ -14,6 +14,10 @@
 @interface GVConfirmCodeController () <UITextFieldDelegate> {
 }
 
+@property (weak, nonatomic) IBOutlet UILabel *lblPhoneNumber;
+@property (strong, nonatomic) IBOutletCollection(UITextField) NSArray *txtCodes;
+@property (weak, nonatomic) IBOutlet UIButton *btnContinue;
+
 @end
 
 @implementation GVConfirmCodeController
@@ -50,7 +54,8 @@
 #pragma mark - My Methods
 
 - (void)initLayout {
-    [self.btnContinue.layer setCornerRadius:5];
+//    [self.btnContinue.layer setCornerRadius:5];
+//    [self.btnContinue setBackgroundColor:[GVShared shared].themeColor];
     
     // Code TextFields
     for (UITextField *textField in self.txtCodes) {
@@ -122,8 +127,13 @@
             if (res[@"refresh_token"]) {
                 [[GVGlobal shared] setRefreshToken:[NSString stringWithFormat:@"%@", res[@"refresh_token"]]];
             }
-//            [self dismissViewControllerAnimated:YES completion:nil];
-            [self.navigationController popViewControllerAnimated:YES];
+            
+            // Dismiss
+            if (self.navigationController) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            else
+                [self dismissViewControllerAnimated:YES completion:nil];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:GV_NS_REGISTERED object:nil];
             return;
@@ -146,8 +156,11 @@
 
 - (IBAction)didClickBack:(id)sender {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:PREF_SIGN_UP_INFO];
-//    [self dismissViewControllerAnimated:YES completion:nil];
-    [self.navigationController popViewControllerAnimated:YES];
+    if (self.navigationController) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else
+        [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)didClickContinue:(id)sender {

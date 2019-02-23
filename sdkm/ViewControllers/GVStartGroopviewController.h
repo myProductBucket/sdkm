@@ -13,11 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GVStartGroopviewController : GVBaseController
 
-@property (weak, nonatomic) IBOutlet UIView *viewBackground;
-@property (weak, nonatomic) IBOutlet UIView *viewContent;
-@property (weak, nonatomic) IBOutlet UIView *viewCreateGroop;
-@property (weak, nonatomic) IBOutlet UIView *viewUseExisting;
-
 @end
 
 NS_ASSUME_NONNULL_END

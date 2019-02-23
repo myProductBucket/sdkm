@@ -13,6 +13,7 @@
 
 @interface GVGroop : NSObject
 
+/// Groop ID or Groopview ID
 @property (strong, nonatomic) NSString *groopId;
 @property (strong, nonatomic) NSString *groopName;
 @property (strong, nonatomic) NSString *adminName;

@@ -12,9 +12,6 @@
 
 @interface GVMyGroopsController : GVBaseNavController
 
-@property (weak, nonatomic) IBOutlet UICollectionView *colGroops;
-@property (weak, nonatomic) IBOutlet UILabel *lblNotFound;
-
 @end
 
 //NS_ASSUME_NONNULL_END

@@ -33,8 +33,8 @@
 #pragma mark - My Methods
 
 - (void)initLayout {
-    [self.layer setBorderColor:[GVShared shared].themeColor.CGColor];
-    [self.layer setBorderWidth:1.0f];
+    [self.viewContent.layer setBorderColor:[GVShared shared].themeColor.CGColor];
+    [self.viewContent.layer setBorderWidth:1.0f];
     
     [self.lblAdminShortName.layer setCornerRadius:self.lblAdminShortName.frame.size.height / 2];
     [self.imgAdminAvatar.layer setCornerRadius:self.imgAdminAvatar.frame.size.height / 2];

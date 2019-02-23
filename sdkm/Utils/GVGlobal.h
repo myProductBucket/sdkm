@@ -46,6 +46,10 @@
 
 #pragma mark - Present ViewControllers
 
++ (void)presentGroopview:(NSString *)groopviewId;
+
++ (void)checkAlertInStack;
+
 @end
 
 //NS_ASSUME_NONNULL_END

@@ -13,6 +13,8 @@
 
 @interface GVUpcomingView : UIView
 
+@property (weak, nonatomic) IBOutlet UIView *viewContent;
+
 @property (weak, nonatomic) IBOutlet UILabel *lblTime;
 @property (weak, nonatomic) IBOutlet UILabel *lblDate;
 @property (weak, nonatomic) IBOutlet UILabel *lblGroopTitle;
@@ -29,6 +31,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *lblGroopviewStatus;
 @property (weak, nonatomic) IBOutlet UILabel *lblVideoTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *imgVideo;
+
+@property (weak, nonatomic) IBOutlet UIButton *btnRemove;
 
 @end
 

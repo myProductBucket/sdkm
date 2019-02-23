@@ -45,12 +45,22 @@
         self.isRightNow = [GVGlobal isNull:dict[@"is_join_now"]]? NO: [dict[@"is_join_now"] boolValue];
         self.isAdmin = [GVGlobal isNull:dict[@"is_admin"]]? NO: [dict[@"is_admin"] boolValue];
         
+        self.numberOfParticipants = 0;
         self.members = [[NSMutableArray alloc] init];
-        [self.members addObject:[[GVParticipant alloc] initWithDictionary:dict[@"members"][@"friend_1"] prefix:@"friend_1"]];
-        [self.members addObject:[[GVParticipant alloc] initWithDictionary:dict[@"members"][@"friend_2"] prefix:@"friend_2"]];
-        [self.members addObject:[[GVParticipant alloc] initWithDictionary:dict[@"members"][@"friend_3"] prefix:@"friend_3"]];
+        [self addParticipant:[[GVParticipant alloc] initWithDictionary:dict[@"members"][@"friend_1"] prefix:@"friend_1"]];
+        [self addParticipant:[[GVParticipant alloc] initWithDictionary:dict[@"members"][@"friend_2"] prefix:@"friend_2"]];
+        [self addParticipant:[[GVParticipant alloc] initWithDictionary:dict[@"members"][@"friend_3"] prefix:@"friend_3"]];
+        self.numberOfParticipants++;
     }
     return self;
+}
+
+- (void)addParticipant:(GVParticipant *)participant {
+    if (participant.countryCode.length > 0
+        && participant.phoneNumber.length > 0) {
+        self.numberOfParticipants++;
+    }
+    [self.members addObject:participant];
 }
 
 @end

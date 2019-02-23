@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "add_contact_red.png",
+      "filename" : "add_contact_enabled.png",
       "scale" : "1x"
     },
     {

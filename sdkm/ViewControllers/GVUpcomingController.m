@@ -49,6 +49,7 @@
 - (void)initLayout {
     
     [self.navigationItem setTitle:@"Upcoming Groopviews"];
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"back" style:UIBarButtonItemStyleDone target:self action:@selector(didClickBack)]];
     
     [self.noResultsLabel setHidden:YES];
     
@@ -92,12 +93,12 @@
                     [self.noResultsLabel setHidden:YES];
                     [self.beforeButton setEnabled:YES];
                     [self.nextButton setEnabled:YES];
-                    [self.iCarouselView reloadData];
                     if (self.allGroopviews.count == 1) {
                         [self.iCarouselView setScrollEnabled:NO];
                     }
                     [self updateIndexLabel];
                 }
+                [self.iCarouselView reloadData];
             }
         }
         else if ([res isKindOfClass:[NSError class]]) {
@@ -129,7 +130,41 @@
     [self.indexLabel setAttributedText:attrStr];
 }
 
+- (void)removeGroopviewAtIndex:(NSInteger)index {
+    if (index < self.allGroopviews.count) {
+        GVGroop *groopview = [self.allGroopviews objectAtIndex:index];
+        NSString *groopviewId = groopview.groopId;
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[GVService shared] removeGroopviewWithId:groopviewId withCompletion:^(BOOL success, id res) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if (success) {
+                if (res[@"status"]) { // Successfull deleted
+                    [self getGroopviews];
+                }
+            }
+            else if ([res isKindOfClass:[NSError class]]) {
+                NSError *error = res;
+                [GVGlobal showAlertWithTitle:GROOPVIEW
+                                     message:error.localizedDescription
+                                    fromView:self
+                              withCompletion:nil];
+            }
+            else {
+                [GVGlobal showAlertWithTitle:GROOPVIEW
+                                     message:GV_ERROR_MESSAGE
+                                    fromView:self
+                              withCompletion:nil];
+            }
+        }];
+    }
+}
+
 #pragma mark - Actions
+
+- (void)didClickBack {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (IBAction)beforeClicked:(UIButton *)sender {
     NSInteger itemCount = self.allGroopviews.count;
@@ -147,6 +182,14 @@
         nextIndex = itemCount - nextIndex;
     }
     [self.iCarouselView scrollToItemAtIndex:nextIndex animated:YES];
+}
+
+- (void)didClickRemove:(UIButton *)sender {
+    [GVGlobal showAlertWithTitle:GROOPVIEW message:@"Are you sure you want to remove this Groopview?" yesButtonTitle:@"Yes" noButtonTitle:@"No" fromView:self yesCompletion:^(UIAlertAction *action) {
+        
+        // Remove Groopview
+        [self removeGroopviewAtIndex:sender.tag];
+    }];
 }
 
 #pragma mark - iCarouselDelegate & iCarouselDataSource
@@ -169,6 +212,16 @@
         view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cellWid, cellHei)];
         GVUpcomingView *upcomingView = [[[GVShared getBundle] loadNibNamed:@"GVUpcomingView" owner:self options:nil] lastObject];
         [upcomingView setFrame:CGRectMake(0, 0, cellWid, cellHei)];
+        
+        NSString *myNumber = [GVGlobal shared].mUser.phoneNumber;
+        NSString *hostNumber = groop.adminPhone;
+        if ([myNumber isEqualToString:hostNumber]) { // if you are a host of this groopview
+            [upcomingView.btnRemove setHidden:NO];
+            [upcomingView.btnRemove setTag:index];
+            [upcomingView.btnRemove addTarget:self action:@selector(didClickRemove:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        else
+            [upcomingView.btnRemove setHidden:YES];
         
         // Layout
         [upcomingView.imgAdminAvatar.layer setBorderWidth:1];
@@ -275,7 +328,8 @@
         }
         
         [view addSubview:upcomingView];
-    } else {
+    }
+    else {
         //--
     }
     

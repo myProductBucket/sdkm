@@ -10,7 +10,15 @@
 #import "GVCreateGroopController.h"
 #import "GVMyGroopsController.h"
 
-@interface GVStartGroopviewController ()
+@interface GVStartGroopviewController () {
+}
+
+@property (weak, nonatomic) IBOutlet UIView *viewBackground;
+@property (weak, nonatomic) IBOutlet UIView *viewContent;
+@property (weak, nonatomic) IBOutlet UIView *viewCreateGroop;
+@property (weak, nonatomic) IBOutlet UIView *viewUseExisting;
+
+@property (weak, nonatomic) IBOutlet UILabel *lblHeader;
 
 @end
 
@@ -54,6 +62,8 @@
 #pragma mark - Private Methods
 
 - (void)initLayout {
+    [self.lblHeader setBackgroundColor:[GVShared shared].themeColor];
+    
     [self.viewCreateGroop setShadow:3];
     [self.viewUseExisting setShadow:3];
     

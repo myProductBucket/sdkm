@@ -72,10 +72,10 @@
     
     self.menuBackground = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cb, cb)];
     [self addSubview:self.menuBackground];
-    [self.menuBackground setImage:[UIImage imageNamed:@"menu_background.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
+    [self.menuBackground setImage:[UIImage imageNamed:@"MenuBackground" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
     [self.menuBackground setAlpha:0];
     
-    dStr = @"    Notifications";
+    dStr = @"    Notifications  ";
     self.firstLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [dStr sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:fd]}].width + 20, cd)];
     self.firstLabel.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
     [self.firstLabel setAlpha:0];
@@ -95,9 +95,9 @@
     [self.firstButton setTag:0];
     [self.firstButton addTarget:self action:@selector(menuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     self.firstButton.alpha = 0.0;
-    [self.firstButton setImage:[UIImage imageNamed:@"menu_star.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+    [self.firstButton setImage:[UIImage imageNamed:@"MenuStar" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
     
-    dStr = @"    Upcoming Groopviews";
+    dStr = @"    Upcoming Groopviews  ";
     self.secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [dStr sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:fd]}].width + 20, cd)];
     self.secondLabel.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
     [self.secondLabel setAlpha:0];
@@ -117,9 +117,9 @@
     [self.secondButton setTag:1];
     [self.secondButton addTarget:self action:@selector(menuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     self.secondButton.alpha = 0.0;
-    [self.secondButton setImage:[UIImage imageNamed:@"menu_future.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+    [self.secondButton setImage:[UIImage imageNamed:@"MenuFuture" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
     
-    dStr = @"    Start a Groopview";
+    dStr = @"    Start a Groopview  ";
     self.thirdLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [dStr sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:fd]}].width + 20, cd)];
     self.thirdLabel.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
     [self.thirdLabel setAlpha:0];
@@ -139,7 +139,7 @@
     [self.thirdButton setTag:2];
     [self.thirdButton addTarget:self action:@selector(menuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     self.thirdButton.alpha = 0.0;
-    [self.thirdButton setImage:[UIImage imageNamed:@"menu_start.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+    [self.thirdButton setImage:[UIImage imageNamed:@"MenuStart" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
     
     self.buttons = @[self.firstButton, self.secondButton, self.thirdButton];
     
@@ -261,7 +261,7 @@
     
     CGSize size = vc.view.frame.size;
     UIImageView *menuImage = [[UIImageView alloc] initWithFrame:CGRectMake(size.width - cw, size.height - cw, cw, cw)];
-    [menuImage setImage:[UIImage imageNamed:@"menu_button.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
+    [menuImage setImage:[UIImage imageNamed:@"MenuButton" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
     [vc.view addSubview:menuImage];
     
     UIButton *shortCutButton = [[UIButton alloc] initWithFrame:CGRectMake(size.width - ch, size.height - ch, ch, ch)];
@@ -272,6 +272,20 @@
     [[NSNotificationCenter defaultCenter] addObserverForName:GV_NS_REGISTERED object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         [self startGroopviewFlow:self->selectedTag];
     }];
+    
+    // Manage the Access Token
+    if ([GVGlobal shared].accessToken.length == 0) { //
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:PREF_CURRENT_USER]) {
+            [[GVGlobal shared] setMUser:[GVUser loadUser:PREF_CURRENT_USER]];
+            [self authenticate:[GVGlobal shared].mUser.phoneNumber];
+        }
+        else if ([GVShared shared].userInfo) {
+            [self authenticate:[GVShared shared].userInfo.email];
+        }
+        else {
+            [GVGlobal showAlertWithTitle:GROOPVIEW message:@"Please pass the user info to use the Groopview." fromView:self.parentVC withCompletion:nil];
+        }
+    }
 }
 
 - (void)configureGesture {
@@ -481,11 +495,15 @@
         // Manage the Access Token
         if ([GVGlobal shared].accessToken == nil
             || [GVGlobal shared].accessToken.length == 0) { //
+            
             if ([[NSUserDefaults standardUserDefaults] objectForKey:PREF_CURRENT_USER]) {
+                
                 [[GVGlobal shared] setMUser:[GVUser loadUser:PREF_CURRENT_USER]];
+                [MBProgressHUD showHUDAddedTo:self.parentVC.view animated:YES];
                 [self authenticate:[GVGlobal shared].mUser.phoneNumber];
             }
             else if ([GVShared shared].userInfo) {
+                [MBProgressHUD showHUDAddedTo:self.parentVC.view animated:YES];
                 [self authenticate:[GVShared shared].userInfo.email];
             }
             else {
@@ -514,52 +532,34 @@
 
 - (void)presentConfirmCode {
     GVConfirmCodeController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVConfirmCodeController"];
-    if (self.parentVC.navigationController) {
-        [self.parentVC.navigationController pushViewController:vc animated:YES];
-    }
-    else {
-        [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-        [self.parentVC presentViewController:vc animated:YES completion:nil];
-    }
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [nav setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self.parentVC presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)presentPhoneNumber {
     GVPhoneNumberController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVPhoneNumberController"];
-    if (self.parentVC.navigationController) {
-        [self.parentVC.navigationController pushViewController:vc animated:YES];
-    }
-    else {
-        [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-        [self.parentVC presentViewController:vc animated:YES completion:nil];
-    }
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [nav setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self.parentVC presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)presentNotifications {
     GVNotificationsController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVNotificationsController"];
-    if (self.parentVC.navigationController) {
-        [self.parentVC.navigationController pushViewController:vc animated:YES];
-    }
-    else {
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [nav setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-        [self.parentVC presentViewController:vc animated:YES completion:nil];
-    }
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [nav setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self.parentVC presentViewController:nav animated:YES completion:nil];
 }
 
 - (void)presentUpcomingGroopviews {
     GVUpcomingController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVUpcomingController"];
-    if (self.parentVC.navigationController) {
-        [self.parentVC.navigationController pushViewController:vc animated:YES];
-    }
-    else {
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [nav setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-        [self.parentVC presentViewController:vc animated:YES completion:nil];
-    }
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    [nav setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [nav setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self.parentVC presentViewController:nav animated:YES completion:nil];
 }
 
 #pragma mark - Authenticate
@@ -570,12 +570,11 @@
         [GVGlobal showAlertWithTitle:GROOPVIEW message:@"Please pass your email address to use the Groopview." fromView:self.parentVC withCompletion:nil];
         return;
     }
-
-    [MBProgressHUD showHUDAddedTo:self.parentVC.view animated:YES];
+    
     [[GVService shared] authenticate:userId completion:^(BOOL success, id res) {
         [MBProgressHUD hideHUDForView:self.parentVC.view animated:YES];
         if (success) {
-            NSLog(@"res");
+            NSLog(@"%@", res);
             if ([res isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *dic = res;
                 if (dic[@"token_type"]) {
@@ -589,21 +588,24 @@
                 }
                 
                 // Get User Info
-                [MBProgressHUD showHUDAddedTo:self.viewForLastBaselineLayout animated:YES];
+                [MBProgressHUD showHUDAddedTo:self.parentVC.view animated:YES];
                 [[GVService shared] getUserInfoWithCompletion:^(BOOL success, id res) {
-                    [MBProgressHUD hideHUDForView:self.viewForLastBaselineLayout animated:YES];
+                    [MBProgressHUD hideHUDForView:self.parentVC.view animated:YES];
                     if (success) {
                         if (res[@"data"]
                             && [res[@"data"] isKindOfClass:[NSDictionary class]]) {
                             NSDictionary *dic = res[@"data"];
                             GVUser *user = [[GVUser alloc] init];
-                            user.firstName = [dic objectForKey:@"first_name"];
-                            user.lastName = [dic objectForKey:@"last_name"];
-                            user.email = [dic objectForKey:@"email"];
-                            user.countryCode = [dic objectForKey:@"country_code"];
-                            user.phoneNumber = [dic objectForKey:@"phone_number"];
-                            user.avatar = [dic objectForKey:@"avatar_url"];
+                            user.firstName = [GVGlobal isNull:[dic objectForKey:@"first_name"]]? nil: [dic objectForKey:@"first_name"];
+                            user.lastName = [GVGlobal isNull:[dic objectForKey:@"last_name"]]? nil: [dic objectForKey:@"last_name"];
+                            user.email = [GVGlobal isNull:[dic objectForKey:@"email"]]? nil: [dic objectForKey:@"email"];
+                            user.countryCode = [GVGlobal isNull:[dic objectForKey:@"country_code"]]? nil: [dic objectForKey:@"country_code"];
+                            user.phoneNumber = [GVGlobal isNull:[dic objectForKey:@"phone_number"]]? nil: [dic objectForKey:@"phone_number"];
+                            user.avatar = [GVGlobal isNull:[dic objectForKey:@"avatar_url"]]? nil: [dic objectForKey:@"avatar_url"];
+                            [user createUserName];
+                            [user createShortName];
                             [user save:PREF_CURRENT_USER];
+                            [[GVGlobal shared] setMUser:user];
                         }
                     }
                 }];

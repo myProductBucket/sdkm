@@ -27,6 +27,8 @@
 
 @property (strong, nonatomic) NSString *shortName;
 
+- (void)createUserName;
+
 - (void)createShortName;
 
 - (void)save:(NSString *)key;

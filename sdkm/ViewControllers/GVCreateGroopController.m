@@ -16,6 +16,17 @@
     Boolean isSearch;
 }
 
+@property (weak, nonatomic) IBOutlet UIView *viewBottom;
+@property (weak, nonatomic) IBOutlet UITableView *tblContacts;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segSection;
+
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *removeButtons;
+@property (strong, nonatomic) IBOutletCollection(GVCircleImageView) NSArray *groopAvatars;
+@property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *groopShortNames;
+
+@property (weak, nonatomic) IBOutlet UIView *viewSegment;
+@property (weak, nonatomic) IBOutlet UIButton *btnContinue;
+
 @property (nonatomic, strong) NSMutableArray *groopUsers;
 
 @property (nonatomic, strong) NSMutableArray *arrAllContacts;
@@ -68,9 +79,12 @@
 - (void)initLayout {
     [self.navigationItem setTitle:@"Create a Groop"];
     
+    [self.viewSegment setBackgroundColor:[GVShared shared].themeColor];
+    [self.btnContinue setBackgroundColor:[GVShared shared].themeColor];
+    
     // Navigation Bar
     self.navigationItem.rightBarButtonItem = [self searchNavItem];
-    [self.navigationItem setTitle:@"My Groups"];
+    [self.navigationItem setTitle:@"My Groops"];
     
     // Search Bar
     [[UITextField appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTintColor:[UIColor darkGrayColor]];
@@ -102,12 +116,12 @@
             CNContactStore *contactStore = [[CNContactStore alloc] init];
             [contactStore requestAccessForEntityType:entityType completionHandler:^(BOOL granted, NSError * _Nullable error) {
                 if(granted){
-                    [self readContacts];
+                    [self readContactsForOrder];
                 }
             }];
         }
         else if ([CNContactStore authorizationStatusForEntityType:entityType] ==  CNAuthorizationStatusAuthorized) {
-            [self readContacts];
+            [self readContactsForOrder];
         }
     }
 }
@@ -144,6 +158,26 @@
 //    }];
 }
 
+- (void)readContactsForOrder {
+    NSMutableArray *contacts = [NSMutableArray new];
+    NSArray *keysToFetch = @[CNContactEmailAddressesKey, CNContactPhoneNumbersKey, CNContactFamilyNameKey, CNContactGivenNameKey, CNContactPostalAddressesKey];
+    CNContactStore *contactStore = [[CNContactStore alloc] init];
+    CNContactFetchRequest *fetchRequest = [[CNContactFetchRequest alloc] initWithKeysToFetch:keysToFetch];
+    [fetchRequest setSortOrder:CNContactSortOrderGivenName];
+    
+    NSError *error;
+    [contactStore enumerateContactsWithFetchRequest:fetchRequest error:&error usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
+        if (*stop == NO
+            && contact)
+            [contacts addObject:contact];
+    }];
+    
+    if (error)
+        [GVGlobal showAlertWithTitle:GROOPVIEW message:error.localizedDescription fromView:self withCompletion:nil];
+    else
+        [self getUsers:contacts];
+}
+
 - (void)refreshGroop {
     [self initGroop];
     
@@ -177,7 +211,7 @@
         [button setTag:i];
         
         GVCircleImageView *imgAvatar = self.groopAvatars[i];
-        [imgAvatar setImage:[UIImage imageNamed:@"add_contact_bottom.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
+        [imgAvatar setImage:[UIImage imageNamed:@"AddContactBottom" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil]];
     }
 }
 
@@ -243,28 +277,31 @@
     
     self.arrGroopviewContacts = [NSMutableArray array];
     // --
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    });
     [[GVService shared] checkPhonenumbersExist:[NSMutableArray arrayWithArray:phoneNumbers.allKeys] withCompletion:^(BOOL success, id res) {
-        
-         [MBProgressHUD hideHUDForView:self.view animated:YES];
-         if (success) {
-             if (res[@"phone_numbers"]) {
-                 for (GVUser *user in self.arrAllContacts) {
-                     for (NSString *phoneNumber in res[@"phone_numbers"]) {
-                         if ([user.phoneNumber isEqualToString:phoneNumber]) {
-                             [user setIsGroopview:YES];
-                             [self.arrGroopviewContacts addObject:user];
-                             break;
-                         }
-                     }
-                 }
-                 [self.tblContacts reloadData];
-             }
-         } else if ([res isKindOfClass:[NSError class]]) {
-             NSError *error = res;
-             [GVGlobal showAlertWithTitle:GROOPVIEW message:[NSString stringWithFormat:@"%@", error.localizedDescription] fromView:self withCompletion:nil];
-         }
-     }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        });
+        if (success) {
+            if (res[@"phone_numbers"]) {
+                for (GVUser *user in self.arrAllContacts) {
+                    for (NSString *phoneNumber in res[@"phone_numbers"]) {
+                        if ([user.phoneNumber isEqualToString:phoneNumber]) {
+                            [user setIsGroopview:YES];
+                            [self.arrGroopviewContacts addObject:user];
+                            break;
+                        }
+                    }
+                }
+                [self.tblContacts reloadData];
+            }
+        } else if ([res isKindOfClass:[NSError class]]) {
+            NSError *error = res;
+            [GVGlobal showAlertWithTitle:GROOPVIEW message:[NSString stringWithFormat:@"%@", error.localizedDescription] fromView:self withCompletion:nil];
+        }
+    }];
 }
 
 - (void)removeSearchBar {
@@ -365,6 +402,9 @@
     }
     
     if (self.groopUsers && self.groopUsers.count > 0) {
+        
+        [[GVShared shared].createGroopviewInfo setObject:@"0" forKey:GV_GROOP_ID];
+        
         GVUser *user = [self.groopUsers objectAtIndex:0];
         if (user.phoneNumber.length > 0
             && user.countryCode.length > 0) {
@@ -598,9 +638,10 @@
         [cell.btnAdd setTag:indexPath.row];
         [cell.btnInvite setTag:indexPath.row];
         if (user.isAdded) {
-            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"add_contact_red.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
-        } else {
-            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"add_contact_dark_gray.png" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"AddContactRed" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+        }
+        else {
+            [cell.btnAdd setBackgroundImage:[UIImage imageNamed:@"AddContactGray" inBundle:[GVShared getBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
         }
         
         [cell.lblAvatar setText:user.shortName];

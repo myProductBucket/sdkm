@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "add_contact_dark_gray.png",
+      "filename" : "add_contact_disabled.png",
       "scale" : "1x"
     },
     {

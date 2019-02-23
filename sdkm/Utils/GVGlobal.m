@@ -9,6 +9,8 @@
 #import "GVGlobal.h"
 #import "GVStartGroopviewController.h"
 #import "GVMyGroopsController.h"
+#import "GVGroopviewController.h"
+@import Firebase;
 
 @interface GVGlobal() {
     
@@ -25,6 +27,7 @@
     dispatch_once(&predicate, ^{
         sharedObject = [[self alloc] init];
         //sharedObject = [[[self alloc] init] retain]; // if you're not using ARC
+        [FIRApp configure];
     });
     return sharedObject;
 }
@@ -43,9 +46,10 @@
     [alertC addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         if (handler != nil) {
             handler(action);
-        } else {
         }
-//        [MY_APPDELEGATE checkViewControllersArray];
+        else {
+            [GVGlobal checkAlertInStack];
+        }
     }]];
     [vc presentViewController:alertC animated:YES completion:nil];
 }
@@ -61,12 +65,13 @@
     [alertC addAction:[UIAlertAction actionWithTitle:yesStr style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         if (handler != nil) {
             handler(action);
-        } else {
-//            [MY_APPDELEGATE checkViewControllersArray];
+        }
+        else {
+            [GVGlobal checkAlertInStack];
         }
     }]];
     [alertC addAction:[UIAlertAction actionWithTitle:noStr style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//        [MY_APPDELEGATE checkViewControllersArray];
+        [GVGlobal checkAlertInStack];
     }]];
     [vc presentViewController:alertC animated:YES completion:nil];
 }
@@ -91,7 +96,8 @@
         [phoneDic setObject:countryCode == nil? @"": [countryCode stringValue] forKey:@"country_code"];
         nationalNumber = [[nationalNumber componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""];
         [phoneDic setObject:nationalNumber == nil? @"": nationalNumber forKey:@"phone_number"];
-    } else {
+    }
+    else {
         NSNumber *countryCodeByCarrior = [phoneUtil getCountryCodeForRegion:[phoneUtil countryCodeByCarrier]];
         [phoneDic setObject:[countryCodeByCarrior stringValue] forKey:@"country_code"];
         [phoneDic setObject:[[from componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] forKey:@"phone_number"];
@@ -115,6 +121,38 @@
 
 #pragma mark - Present ViewControllers
 
++ (void)presentGroopview:(NSString *)groopviewId {
+    GVGroopviewController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVGroopviewController"];
+    [vc setGroopviewId:groopviewId];
+    [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+    [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    if (window.rootViewController.presentedViewController) {
+        [window.rootViewController.presentedViewController dismissViewControllerAnimated:YES completion:^{
+            [window.rootViewController presentViewController:vc animated:YES completion:nil];
+        }];
+    }
+    else
+        [window.rootViewController presentViewController:vc animated:YES completion:nil];
+}
 
++ (void)checkAlertInStack {
+    if ([GVShared shared].arrAlerts == nil
+        || [GVShared shared].arrAlerts.count == 0) {
+        return;
+    }
+    UIViewController *vc = [[GVShared shared].arrAlerts lastObject];
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    if (window.rootViewController.presentedViewController == nil
+        && ![[NSUserDefaults standardUserDefaults] boolForKey:PREF_GROOPVIEW_STARTED]
+        && ![[NSUserDefaults standardUserDefaults] boolForKey:PREF_GROOPVIEW_ALERT_PRESENTED]) {
+        
+        [window.rootViewController presentViewController:vc animated:YES completion:^{
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PREF_GROOPVIEW_ALERT_PRESENTED];
+        }];
+        
+        [[GVShared shared].arrAlerts removeLastObject];
+    }
+}
 
 @end

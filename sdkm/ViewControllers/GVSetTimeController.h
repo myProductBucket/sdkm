@@ -13,12 +13,6 @@
 
 @interface GVSetTimeController : GVBaseNavController
 
-@property (weak, nonatomic) IBOutlet UISwitch *switchRightNow;
-@property (weak, nonatomic) IBOutlet UIImageView *imgCalendar;
-@property (weak, nonatomic) IBOutlet UILabel *lblDateTime;
-@property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
-@property (weak, nonatomic) IBOutlet UIButton *btnInvite;
-
 @property (strong, nonatomic) NSMutableArray *groopUsers;
 @property (strong, nonatomic) GVGroop *groop;
 

@@ -43,6 +43,7 @@
 
 // NSNotification Names
 #define GV_NS_REGISTERED @"registered"
+#define GV_ALERT_DISMISSED @"alert_dismissed"
 
 // NSUserDefault Keys
 #define PREF_SIGN_UP_INFO @"sign_up_info"
@@ -58,5 +59,18 @@
 #define GV_CLIENT_KEYS @"Clientkeys"
 #define GV_ACCEPT_TYPE @"Accept"
 #define GV_AUTHORIZATION @"Authorization"
+
+// Firebase Database
+#define FIR_GROOPVIEWS    @"groopviews"
+#define FIR_GROOPVIEW_ID  @"groopview_id"
+#define FIR_PLAYBACK_TIME @"playback_time" // Milliseconds as double
+#define FIR_VIDEO_STATE   @"video_state" // 1: Playing, 0: Pause, 2: Stop
+
+#define FIR_MESSAGES_KEY   @"messages"
+#define FIR_SENDER_ID      @"sender_id"
+#define FIR_SENDER_NAME    @"sender_name"
+#define FIR_SENDER_MESSAGE @"message"
+/// 0: text, 1: emoji
+#define FIR_IS_EMOJI       @"is_emoji"
 
 #endif /* PrefixHeader_pch */

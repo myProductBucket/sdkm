@@ -8,7 +8,7 @@
 
 #import "MainViewController.h"
 #import "ViewController.h"
-#import <sdkm/Groopview.h>
+#import <Groopview/Groopview.h>
 
 @interface MainViewController () {
 }

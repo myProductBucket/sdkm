@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import <sdkm/Groopview.h>
+#import <Groopview/Groopview.h>
 
 @interface ViewController () {
     GVGroopviewMenu *groopviewMenu;

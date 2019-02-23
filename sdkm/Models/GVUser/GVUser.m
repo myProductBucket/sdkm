@@ -10,6 +10,22 @@
 
 @implementation GVUser
 
+- (void)createUserName {
+    if (self.firstName.length > 0
+        && self.lastName.length > 0) {
+        self.userName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+    }
+    else if (self.firstName.length > 0) {
+        self.userName = self.firstName;
+    }
+    else if (self.lastName.length > 0) {
+        self.userName = self.lastName;
+    }
+    else {
+        self.userName = @"Unknown";
+    }
+}
+
 - (void)createShortName {
     if (![GVGlobal isNull:self.firstName]
         && ![GVGlobal isNull:self.lastName]) {

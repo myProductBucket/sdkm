@@ -15,6 +15,11 @@
 @interface GVPhoneNumberController () <CountryPickerDelegate, UITextFieldDelegate> {
 }
 
+@property (weak, nonatomic) IBOutlet UITextField *txtCountryCode;
+@property (weak, nonatomic) IBOutlet UITextField *txtPhoneNumber;
+@property (weak, nonatomic) IBOutlet UITextField *txtCountryName;
+@property (weak, nonatomic) IBOutlet UIButton *btnContinuePhone;
+
 @end
 
 @implementation GVPhoneNumberController
@@ -25,9 +30,8 @@
     
     [self initLayout];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:GV_NS_REGISTERED object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-//        [self dismissViewControllerAnimated:YES completion:nil];
-        [self.navigationController popViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] addObserverForName:GV_NS_REGISTERED object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {        
+        [self dismissViewControllerAnimated:YES completion:nil];
     }];
 }
 
@@ -50,6 +54,7 @@
 #pragma mark - My Methods
 
 - (void)initLayout {
+    
     CountryPicker *countryPicker = [[CountryPicker alloc] init];
     [countryPicker setDelegate:self];
     
@@ -71,7 +76,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didChangeCountryCode:) name:UITextFieldTextDidChangeNotification object:self.txtCountryCode];
     
     // Buttons
-    [self.btnContinuePhone.layer setCornerRadius:5];
+//    [self.btnContinuePhone.layer setCornerRadius:5];
+//    [self.btnContinuePhone setBackgroundColor:[GVShared shared].themeColor];
 }
 
 - (Boolean)validatePhoneNumber {
@@ -144,17 +150,24 @@
             if (res[@"verification_token"]) {
                 NSLog(@"Verification Token: %@", res[@"verification_token"]);
     
-    [[GVGlobal shared].mUser save:PREF_SIGN_UP_INFO];
+                [[GVGlobal shared].mUser save:PREF_SIGN_UP_INFO];
     
                 GVConfirmCodeController *vc = [[GVShared getStoryboard] instantiateViewControllerWithIdentifier:@"GVConfirmCodeController"];
-                [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-                [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-                [self presentViewController:vc animated:YES completion:nil];
+                if (self.navigationController) {
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                else {
+                    [vc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+                    [vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+                    [self presentViewController:vc animated:YES completion:nil];
+                }
             }
-        } else if ([res isKindOfClass:[NSError class]]) {
+        }
+        else if ([res isKindOfClass:[NSError class]]) {
             NSError *error = res;
             [GVGlobal showAlertWithTitle:GROOPVIEW message:error.localizedDescription fromView:self withCompletion:nil];
-        } else {
+        }
+        else {
             [GVGlobal showAlertWithTitle:GROOPVIEW message:GV_ERROR_MESSAGE fromView:self withCompletion:nil];
         }
     }];
